@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="iconBg" cx="30%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#1B4F8A"/>
+      <stop offset="100%" stop-color="#0A2540"/>
+    </radialGradient>
+    <radialGradient id="iconSun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD166"/>
+      <stop offset="100%" stop-color="#F4A435"/>
+    </radialGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD166" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFD166" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="115" fill="url(#iconBg)"/>
+  <!-- Stars -->
+  <circle cx="80" cy="80" r="3" fill="white" opacity="0.4"/>
+  <circle cx="140" cy="50" r="2" fill="white" opacity="0.3"/>
+  <circle cx="60" cy="160" r="2" fill="white" opacity="0.25"/>
+  <circle cx="200" cy="70" r="2.5" fill="white" opacity="0.35"/>
+  <!-- Sun glow -->
+  <circle cx="340" cy="155" r="110" fill="url(#sunGlow)"/>
+  <!-- Sun -->
+  <circle cx="340" cy="155" r="72" fill="url(#iconSun)"/>
+  <!-- Sun rays -->
+  <line x1="340" y1="60" x2="340" y2="40" stroke="#FFD166" stroke-width="8" stroke-linecap="round"/>
+  <line x1="340" y1="250" x2="340" y2="270" stroke="#FFD166" stroke-width="8" stroke-linecap="round"/>
+  <line x1="245" y1="155" x2="225" y2="155" stroke="#FFD166" stroke-width="8" stroke-linecap="round"/>
+  <line x1="435" y1="155" x2="455" y2="155" stroke="#FFD166" stroke-width="8" stroke-linecap="round"/>
+  <line x1="273" y1="88" x2="259" y2="74" stroke="#FFD166" stroke-width="7" stroke-linecap="round"/>
+  <line x1="407" y1="222" x2="421" y2="236" stroke="#FFD166" stroke-width="7" stroke-linecap="round"/>
+  <line x1="407" y1="88" x2="421" y2="74" stroke="#FFD166" stroke-width="7" stroke-linecap="round"/>
+  <line x1="273" y1="222" x2="259" y2="236" stroke="#FFD166" stroke-width="7" stroke-linecap="round"/>
+  <!-- Cloud layers -->
+  <ellipse cx="210" cy="300" rx="130" ry="72" fill="white" opacity="0.97"/>
+  <ellipse cx="150" cy="325" rx="95" ry="62" fill="white" opacity="0.95"/>
+  <ellipse cx="285" cy="330" rx="105" ry="58" fill="#e8f4ff" opacity="0.92"/>
+  <ellipse cx="210" cy="295" rx="80" ry="50" fill="white" opacity="0.6"/>
+  <!-- Rain drops -->
+  <line x1="148" y1="380" x2="132" y2="448" stroke="#7EC8E3" stroke-width="11" stroke-linecap="round"/>
+  <line x1="196" y1="390" x2="182" y2="458" stroke="#7EC8E3" stroke-width="11" stroke-linecap="round"/>
+  <line x1="244" y1="390" x2="230" y2="458" stroke="#A8D8EA" stroke-width="11" stroke-linecap="round"/>
+  <line x1="290" y1="386" x2="276" y2="452" stroke="#7EC8E3" stroke-width="11" stroke-linecap="round"/>
+</svg>

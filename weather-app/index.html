@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2b86c5" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Weather View — Your Sky, Your Way</title>
+
+  <!-- ===== Favicons ===== -->
+  <link rel="icon" type="image/svg+xml" href="assets/weather-view-icon.svg" />
+  <link rel="alternate icon" type="image/png" href="assets/weather-view-icon.png" />
+  <link rel="apple-touch-icon" href="assets/weather-view-icon.png" />
+  <link rel="mask-icon" href="assets/weather-view-icon.svg" color="#2b86c5" />
+  <link rel="shortcut icon" href="assets/weather-view-icon.svg" />
+
+  <!-- ===== SEO ===== -->
+  <meta name="description" content="Weather View — Your Sky, Your Way. A fast, vanilla JavaScript weather app with hourly and 5-day forecasts, air quality, and personalized tips." />
+  <meta name="keywords" content="weather, weather app, forecast, hourly weather, 5-day forecast, air quality, AQI, vanilla javascript" />
+  <meta name="author" content="Weather View" />
+  <meta name="application-name" content="Weather View" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://weather-view.example.com/" />
+
+  <!-- ===== Open Graph (Facebook, LinkedIn, etc.) ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Weather View" />
+  <meta property="og:title" content="Weather View — Your Sky, Your Way" />
+  <meta property="og:description" content="A fast, vanilla JavaScript weather app with hourly and 5-day forecasts, air quality, and personalized tips." />
+  <meta property="og:image" content="assets/weather-view-icon.png" />
+  <meta property="og:image:alt" content="Weather View app icon" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:url" content="https://weather-view.example.com/" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- ===== Twitter / X Card ===== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Weather View — Your Sky, Your Way" />
+  <meta name="twitter:description" content="A fast, vanilla JavaScript weather app with hourly and 5-day forecasts, air quality, and personalized tips." />
+  <meta name="twitter:image" content="assets/weather-view-icon.png" />
+  <meta name="twitter:image:alt" content="Weather View app icon" />
+
+  <!-- ===== PWA / Mobile ===== -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Weather View" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-TileColor" content="#2b86c5" />
+  <meta name="msapplication-TileImage" content="assets/weather-view-icon.png" />
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- Tabler Icons (used by the sidebar nav) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css"
+  />
+</head>
+<body class="splash-active">
+  <!-- Splash screen -->
+  <div id="splash" role="status" aria-label="Loading Weather View">
+    <div class="splash-inner">
+      <svg
+        class="splash-icon"
+        viewBox="0 0 120 120"
+        width="120"
+        height="120"
+        aria-hidden="true"
+      >
+        <!-- Rounded navy plate -->
+        <rect x="0" y="0" width="120" height="120" rx="24" fill="#0A2540" />
+        <!-- Sun top-right -->
+        <circle cx="86" cy="34" r="15" fill="#FFD166" />
+        <!-- Sun glow ring -->
+        <circle cx="86" cy="34" r="20" fill="none" stroke="#FFD166" stroke-opacity="0.35" stroke-width="2" />
+        <!-- Cloud -->
+        <path
+          d="M 30 62
+             Q 30 48 44 48
+             Q 50 38 64 41
+             Q 78 41 81 56
+             Q 94 56 94 69
+             Q 94 79 82 79
+             L 35 79
+             Q 24 79 24 69
+             Q 24 60 30 62 Z"
+          fill="#ffffff"
+        />
+        <!-- Rain drops -->
+        <line x1="40" y1="88"  x2="36" y2="100" stroke="#7EC8E3" stroke-width="3" stroke-linecap="round" />
+        <line x1="56" y1="88"  x2="52" y2="102" stroke="#7EC8E3" stroke-width="3" stroke-linecap="round" />
+        <line x1="72" y1="88"  x2="68" y2="100" stroke="#7EC8E3" stroke-width="3" stroke-linecap="round" />
+      </svg>
+
+      <h1 class="splash-title">Weather View</h1>
+
+      <div class="splash-dots" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <p class="splash-tagline">YOUR SKY. YOUR WAY.</p>
+    </div>
+  </div>
+
+  <!-- Sliding sidebar panel + backdrop -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+  <aside id="sidebar" class="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar-header">
+      <svg
+        class="sidebar-icon"
+        viewBox="0 0 56 56"
+        width="56"
+        height="56"
+        aria-hidden="true"
+      >
+        <rect x="0" y="0" width="56" height="56" rx="12" fill="#0A2540" />
+        <circle cx="40" cy="16" r="7" fill="#FFD166" />
+        <circle cx="40" cy="16" r="9" fill="none" stroke="#FFD166" stroke-opacity="0.35" stroke-width="1.5" />
+        <path
+          d="M 14 30
+             Q 14 23 21 23
+             Q 24 18 31 19
+             Q 38 19 39 27
+             Q 45 27 45 33
+             Q 45 38 39 38
+             L 17 38
+             Q 12 38 12 33
+             Q 12 29 14 30 Z"
+          fill="#ffffff"
+        />
+        <line x1="19" y1="42" x2="17" y2="48" stroke="#7EC8E3" stroke-width="2" stroke-linecap="round" />
+        <line x1="27" y1="42" x2="25" y2="49" stroke="#7EC8E3" stroke-width="2" stroke-linecap="round" />
+        <line x1="35" y1="42" x2="33" y2="48" stroke="#7EC8E3" stroke-width="2" stroke-linecap="round" />
+      </svg>
+
+      <div class="sidebar-brand">
+        <span class="sidebar-name">Weather View</span>
+        <span class="sidebar-version">v1.0</span>
+      </div>
+    </div>
+
+    <hr class="sidebar-divider" />
+
+    <nav class="sidebar-nav" aria-label="App sections">
+      <ul>
+        <li>
+          <a href="#" class="sidebar-link" data-action="home">
+            <i class="ti ti-home" aria-hidden="true"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" data-action="favorites">
+            <i class="ti ti-star" aria-hidden="true"></i>
+            <span>Favorites</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" data-action="history">
+            <i class="ti ti-history" aria-hidden="true"></i>
+            <span>Search History</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" data-action="settings">
+            <i class="ti ti-settings" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" data-action="about">
+            <i class="ti ti-info-circle" aria-hidden="true"></i>
+            <span>About</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">Made with Weather View</div>
+  </aside>
+
+  <!-- Pull-to-refresh indicator -->
+  <div id="ptr-indicator" class="ptr-indicator" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-3-6.7"></path>
+      <polyline points="21 4 21 10 15 10"></polyline>
+    </svg>
+  </div>
+
+  <header class="app-navbar" role="banner">
+    <button
+      type="button"
+      id="menu-btn"
+      class="menu-btn"
+      aria-label="Open menu"
+      aria-controls="sidebar"
+      aria-expanded="false"
+    >
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+
+    <a class="app-brand" href="./" aria-label="Weather View — home">
+      <img
+        class="app-logo"
+        src="assets/weather-view-icon.svg"
+        alt=""
+        width="36"
+        height="36"
+        aria-hidden="true"
+      />
+      <span class="brand-text">
+        <span class="brand-name">Weather View</span>
+        <span class="brand-tagline">YOUR SKY. YOUR WAY.</span>
+      </span>
+    </a>
+
+    <!-- Inline search in navbar -->
+    <div class="nav-search" id="nav-search">
+      <form id="search-form" role="search" class="nav-search-form">
+        <button type="button" id="search-toggle-btn" class="icon-btn nav-search-icon" aria-label="Open search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <label for="city-input" class="visually-hidden">City name</label>
+        <input
+          type="text"
+          id="city-input"
+          name="city"
+          placeholder="Search city..."
+          autocomplete="off"
+          aria-label="City name"
+          aria-autocomplete="list"
+          aria-controls="autocomplete"
+          aria-expanded="false"
+          required
+        />
+        <button type="button" id="geo-btn" class="icon-btn nav-geo-btn" aria-label="Use my current location" title="Use my location">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+          </svg>
+        </button>
+        <button type="submit" id="search-btn" class="visually-hidden" aria-label="Search weather">Search</button>
+        <!-- Floating autocomplete dropdown -->
+        <ul id="autocomplete" class="autocomplete" role="listbox" aria-label="Search suggestions" hidden></ul>
+      </form>
+    </div>
+
+    <div class="app-nav-actions">
+      <button
+        type="button"
+        id="unit-toggle"
+        class="unit-toggle"
+        aria-label="Toggle temperature unit"
+        aria-pressed="false"
+        title="Toggle between Celsius and Fahrenheit"
+      >°C</button>
+      <button
+        type="button"
+        id="theme-toggle"
+        aria-label="Switch to dark mode"
+        title="Switch theme"
+      >
+        <svg
+          id="theme-icon"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- History pills + clear button -->
+    <section class="history-section" aria-label="Search history">
+      <ul id="history" class="history" aria-label="Recent searches" hidden></ul>
+      <button type="button" id="clear-history-btn" class="clear-history-btn" hidden aria-label="Clear search history">
+        Clear
+      </button>
+    </section>
+
+    <!-- 4) Error message (hidden by default) -->
+    <div id="error-msg" role="alert" aria-live="assertive" hidden>
+      <p></p>
+    </div>
+
+    <!-- 2) Current weather card -->
+    <section id="weather-card" aria-label="Current weather" aria-live="polite">
+      <!-- Skeleton placeholders (shown while loading) -->
+      <div class="skeleton-layout" id="weather-skeleton" aria-hidden="true" hidden>
+        <div class="skeleton skeleton-line skeleton-city"></div>
+        <div class="skeleton skeleton-icon"></div>
+        <div class="skeleton skeleton-line skeleton-condition"></div>
+        <div class="skeleton skeleton-line skeleton-temp"></div>
+        <div class="skeleton-stats">
+          <div class="skeleton skeleton-stat"></div>
+          <div class="skeleton skeleton-stat"></div>
+          <div class="skeleton skeleton-stat"></div>
+          <div class="skeleton skeleton-stat"></div>
+        </div>
+      </div>
+
+      <header>
+        <h2 id="city-name">Search a city to begin</h2>
+        <button
+          type="button"
+          id="favorite-btn"
+          class="favorite-btn"
+          aria-label="Add to favorites"
+          aria-pressed="false"
+          hidden
+        >☆</button>
+      </header>
+
+      <figure>
+        <img id="weather-icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="Weather icon placeholder" />
+        <figcaption id="condition" aria-label="Weather condition">Enter a city above</figcaption>
+      </figure>
+
+      <p id="temperature" aria-label="Temperature">--°</p>
+
+      <div class="stats-grid" aria-label="Weather conditions">
+        <div class="stat-row stat-item" aria-label="Humidity">
+          <div class="stat-row-header">
+            <span class="stat-label">Humidity</span>
+            <span class="stat-value" id="humidity">—</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill-humidity" id="humidity-fill"></div>
+          </div>
+        </div>
+
+        <div class="stat-row stat-item" aria-label="Wind speed">
+          <div class="stat-row-header">
+            <span class="stat-label">Wind</span>
+            <span class="stat-value" id="wind-speed">—</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill-wind" id="wind-fill"></div>
+          </div>
+        </div>
+
+        <div class="stat-row stat-item" aria-label="UV index">
+          <div class="stat-row-header">
+            <span class="stat-label">UV Index</span>
+            <span class="stat-value" id="uv-index">—</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill-uv" id="uv-fill"></div>
+          </div>
+        </div>
+
+        <div class="stat-row stat-item" aria-label="Visibility">
+          <div class="stat-row-header">
+            <span class="stat-label">Visibility</span>
+            <span class="stat-value" id="visibility-value">—</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill-visibility" id="visibility-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sunrise/sunset arc -->
+      <div class="sun-arc" id="sun-arc" aria-label="Sun position" hidden>
+        <svg
+          class="sun-arc-svg"
+          viewBox="0 0 200 100"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter id="sun-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- Horizon line -->
+          <line
+            x1="0" y1="90" x2="200" y2="90"
+            stroke="rgba(255,255,255,0.25)" stroke-width="1"
+            stroke-dasharray="3 3"
+          />
+          <!-- Background arc (faded) -->
+          <path
+            id="sun-arc-bg"
+            d="M 10 90 A 90 90 0 0 1 190 90"
+            fill="none"
+            stroke="rgba(255,255,255,0.2)"
+            stroke-width="2"
+          />
+          <!-- Progress arc (filled portion) -->
+          <path
+            id="sun-arc-progress"
+            d="M 10 90 A 90 90 0 0 1 190 90"
+            fill="none"
+            stroke="#FFB347"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <!-- The sun dot -->
+          <circle
+            id="sun-dot"
+            cx="10" cy="90" r="6"
+            fill="#FFD166"
+            filter="url(#sun-glow)"
+          />
+        </svg>
+        <div class="sun-times">
+          <span class="sun-time">
+            <span class="sun-label">Sunrise</span>
+            <span id="sunrise-time">—</span>
+          </span>
+          <span class="sun-time sun-time-right">
+            <span class="sun-label">Sunset</span>
+            <span id="sunset-time">—</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Air Quality widget -->
+    <section
+      id="aqi-widget"
+      class="aqi-widget"
+      aria-label="Air quality index"
+    >
+      <div class="aqi-header">
+        <div class="aqi-badge" id="aqi-badge" data-aqi="1">
+          <span class="aqi-number" id="aqi-number">—</span>
+        </div>
+        <div class="aqi-meta">
+          <span class="aqi-title">Air Quality</span>
+          <span class="aqi-label" id="aqi-label">Search a city</span>
+        </div>
+      </div>
+      <ul class="aqi-stats" aria-label="Pollutant readings">
+        <li class="aqi-pill stat-item">
+          <span class="aqi-pill-label">PM2.5</span>
+          <span class="aqi-pill-value" id="aqi-pm25">—</span>
+          <span class="aqi-pill-unit">µg/m³</span>
+        </li>
+        <li class="aqi-pill stat-item">
+          <span class="aqi-pill-label">CO</span>
+          <span class="aqi-pill-value" id="aqi-co">—</span>
+          <span class="aqi-pill-unit">µg/m³</span>
+        </li>
+        <li class="aqi-pill stat-item">
+          <span class="aqi-pill-label">O₃</span>
+          <span class="aqi-pill-value" id="aqi-o3">—</span>
+          <span class="aqi-pill-unit">µg/m³</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Smart tips widget -->
+    <section
+      id="tips-widget"
+      class="tips-widget"
+      aria-label="Personalized weather tips"
+    >
+      <div class="tips-row stat-item" aria-label="Clothing suggestions">
+        <span class="tips-label">What to wear</span>
+        <ul class="tips-list" id="tips-clothing">
+          <li class="tip-pill"><span class="tip-icon" aria-hidden="true">👕</span><span>—</span></li>
+          <li class="tip-pill"><span class="tip-icon" aria-hidden="true">🧥</span><span>—</span></li>
+        </ul>
+      </div>
+      <div class="tips-row stat-item" aria-label="Activity suggestions">
+        <span class="tips-label">Things to do</span>
+        <ul class="tips-list" id="tips-activities">
+          <li class="tip-pill"><span class="tip-icon" aria-hidden="true">🚶</span><span>—</span></li>
+          <li class="tip-pill"><span class="tip-icon" aria-hidden="true">☕</span><span>—</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3) Hourly forecast (next 24h) -->
+    <section aria-label="Hourly forecast">
+      <h2 class="section-title">Next 24 Hours</h2>
+      <div
+        id="hourly-strip"
+        class="hourly-strip"
+        role="list"
+        aria-label="Hourly weather forecast"
+      >
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+        <div class="hour-card" role="listitem"><span class="hour-time">--:--</span><span class="hour-temp">--°</span></div>
+      </div>
+    </section>
+
+    <!-- 4) 5-day forecast -->
+    <section aria-label="5-day forecast">
+      <h2>5-Day Forecast</h2>
+      <ol id="forecast" aria-label="Forecast for the next 5 days">
+        <li><span class="day">MON</span><span class="temp">--° / --°</span></li>
+        <li><span class="day">TUE</span><span class="temp">--° / --°</span></li>
+        <li><span class="day">WED</span><span class="temp">--° / --°</span></li>
+        <li><span class="day">THU</span><span class="temp">--° / --°</span></li>
+        <li><span class="day">FRI</span><span class="temp">--° / --°</span></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <small>&copy; 2026 Weather App</small>
+  </footer>
+
+  <script type="module" src="app.js" defer></script>
+</body>
+</html>

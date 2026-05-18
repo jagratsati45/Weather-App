@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#1B4F8A"/>
+  <!-- Sun -->
+  <circle cx="43" cy="21" r="13" fill="#FFD166"/>
+  <!-- Cloud -->
+  <ellipse cx="27" cy="37" rx="18" ry="11" fill="white" opacity="0.97"/>
+  <ellipse cx="18" cy="41" rx="13" ry="9" fill="white" opacity="0.95"/>
+  <ellipse cx="37" cy="42" rx="14" ry="8" fill="#e8f4ff" opacity="0.92"/>
+  <!-- Rain -->
+  <line x1="17" y1="49" x2="15" y2="58" stroke="#7EC8E3" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="27" y1="51" x2="25" y2="60" stroke="#7EC8E3" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="37" y1="50" x2="35" y2="59" stroke="#A8D8EA" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
