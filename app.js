@@ -1984,8 +1984,13 @@ function autoFetchLocation() {
   toast.id = 'geo-toast';
   toast.className = 'geo-toast';
   toast.innerHTML = `
-    <span class="geo-toast-icon">📍</span>
-    <span class="geo-toast-text">Tap the <strong>⊕</strong> button in the search bar to use your current location</span>
+    <span class="geo-toast-icon">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+      </svg>
+    </span>
+    <span class="geo-toast-text">Tap <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin:0 3px;opacity:0.8;"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg> to get your local weather</span>
     <button class="geo-toast-close" aria-label="Dismiss">&times;</button>
   `;
   document.body.appendChild(toast);
@@ -2346,8 +2351,8 @@ function initSidebarPanels() {
   function syncSettingsPanel() {
     const unitBtn = document.getElementById('settings-unit-btn');
     const themeBtn = document.getElementById('settings-theme-btn');
-    if (unitBtn) unitBtn.textContent = state.unit === 'C' ? '°C → Switch to °F' : '°F → Switch to °C';
-    if (themeBtn) themeBtn.textContent = document.body.classList.contains('dark') ? '🌙 Dark → Light' : '☀️ Light → Dark';
+    if (unitBtn) unitBtn.textContent = state.unit === 'C' ? '°C' : '°F';
+    if (themeBtn) themeBtn.textContent = document.body.classList.contains('dark') ? '🌙 Dark' : '☀️ Light';
   }
 
   document.getElementById('settings-unit-btn')?.addEventListener('click', () => {

@@ -190,7 +190,7 @@
   <div id="panel-favorites" class="side-panel" hidden aria-label="Favorites" role="dialog">
     <div class="side-panel-inner">
       <div class="side-panel-header">
-        <h2>⭐ Favorites</h2>
+        <h2><i class="ti ti-star" aria-hidden="true"></i> Favorites</h2>
         <button class="side-panel-close" data-panel="favorites" aria-label="Close">✕</button>
       </div>
       <ul id="favorites-list" class="side-panel-list"></ul>
@@ -202,7 +202,7 @@
   <div id="panel-history" class="side-panel" hidden aria-label="Search History" role="dialog">
     <div class="side-panel-inner">
       <div class="side-panel-header">
-        <h2>🕐 Search History</h2>
+        <h2><i class="ti ti-history" aria-hidden="true"></i> Search History</h2>
         <button class="side-panel-close" data-panel="history" aria-label="Close">✕</button>
       </div>
       <ul id="history-panel-list" class="side-panel-list"></ul>
@@ -215,7 +215,7 @@
   <div id="panel-settings" class="side-panel" hidden aria-label="Settings" role="dialog">
     <div class="side-panel-inner">
       <div class="side-panel-header">
-        <h2>⚙️ Settings</h2>
+        <h2><i class="ti ti-settings" aria-hidden="true"></i> Settings</h2>
         <button class="side-panel-close" data-panel="settings" aria-label="Close">✕</button>
       </div>
       <div class="settings-list">
@@ -239,17 +239,28 @@
   <div id="panel-about" class="side-panel" hidden aria-label="About" role="dialog">
     <div class="side-panel-inner">
       <div class="side-panel-header">
-        <h2>ℹ️ About</h2>
+        <h2><i class="ti ti-info-circle" aria-hidden="true"></i> About</h2>
         <button class="side-panel-close" data-panel="about" aria-label="Close">✕</button>
       </div>
       <div class="about-content">
         <img src="assets/weather-view-icon.svg" alt="Weather View" width="72" height="72" style="border-radius:16px;margin:0 auto 1rem;display:block;">
         <h3 style="text-align:center;font-size:1.2rem;font-weight:700;margin-bottom:0.25rem;">Weather View</h3>
         <p style="text-align:center;opacity:0.6;font-size:0.8rem;margin-bottom:1.5rem;">v1.0 — Your Sky. Your Way.</p>
-        <div class="about-row"><span>🌐 Data</span><span>OpenWeatherMap API</span></div>
-        <div class="about-row"><span>⚡ Built with</span><span>Vanilla JS, HTML, CSS</span></div>
-        <div class="about-row"><span>🎨 Icons</span><span>Tabler Icons + Emojis</span></div>
-        <div class="about-row"><span>📦 Version</span><span>1.0.0</span></div>
+        <div class="about-row"><span><i class="ti ti-user" aria-hidden="true"></i> Made by</span><span>Jagrat Sati</span></div>
+        <div class="about-row"><span><i class="ti ti-cloud" aria-hidden="true"></i> Data</span><span>OpenWeatherMap API</span></div>
+        <div class="about-row"><span><i class="ti ti-code" aria-hidden="true"></i> Built with</span><span>Vanilla JS, HTML, CSS</span></div>
+        <div class="about-row"><span><i class="ti ti-palette" aria-hidden="true"></i> Icons</span><span>Tabler Icons</span></div>
+        <div class="about-row"><span><i class="ti ti-package" aria-hidden="true"></i> Version</span><span>1.0.0</span></div>
+        <div class="about-socials">
+          <a href="https://github.com/jagratsati45" target="_blank" rel="noopener noreferrer" class="about-social-link" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.linkedin.com/in/jagratsati045/" target="_blank" rel="noopener noreferrer" class="about-social-link" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            <span>LinkedIn</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>

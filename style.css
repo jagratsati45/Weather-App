@@ -5190,3 +5190,313 @@ body.dark .side-panel,
 body:not(.dark) .side-panel {
   background: #ffffff !important;
 }
+
+/* ============================================================
+   Hide unit toggle and theme toggle from navbar (moved to Settings)
+   ============================================================ */
+.app-nav-actions #unit-toggle,
+.app-nav-actions #theme-toggle {
+  display: none !important;
+}
+
+/* ============================================================
+   Settings toggle buttons: compact, single line
+   ============================================================ */
+.settings-toggle-btn {
+  white-space: nowrap !important;
+  padding: 0.4rem 1rem !important;
+  font-size: 0.85rem !important;
+  min-width: auto !important;
+  min-height: 36px !important;
+  max-width: 100px !important;
+}
+
+/* ============================================================
+   GEO TOAST: professional, uses real geo icon
+   ============================================================ */
+.geo-toast-icon {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  flex-shrink: 0 !important;
+  font-size: 0 !important; /* hide any text fallback */
+  animation: none !important;
+}
+
+.geo-toast-icon svg {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================================
+   SEARCH BAR: remove search icon, stretch on tablet/desktop
+   ============================================================ */
+
+/* Hide the search magnifier icon on all devices */
+.nav-search-icon,
+#search-toggle-btn {
+  display: none !important;
+}
+
+/* Mobile: search bar takes full available width */
+@media (max-width: 767px) {
+  .nav-search {
+    flex: 1 !important;
+    max-width: none !important;
+  }
+
+  .nav-search-form {
+    width: 100% !important;
+  }
+}
+
+/* Tablet (768px - 1099px): search stretches wider */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .nav-search {
+    flex: 1 !important;
+    max-width: 400px !important;
+    width: 400px !important;
+  }
+}
+
+/* Desktop (1100px+): search stays right-aligned, wider */
+@media (min-width: 1100px) {
+  .nav-search {
+    width: 350px !important;
+    max-width: 350px !important;
+  }
+}
+
+/* ============================================================
+   SEARCH BAR: smaller on mobile, right-aligned on tablet
+   ============================================================ */
+
+/* Mobile: smaller, don't take full width */
+@media (max-width: 767px) {
+  .nav-search {
+    flex: 0 1 auto !important;
+    max-width: 180px !important;
+    width: auto !important;
+    margin-left: auto !important;
+  }
+
+  .nav-search-form {
+    height: 34px !important;
+    padding: 0 4px 0 10px !important;
+  }
+
+  .nav-search-form #city-input {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Tablet: push to right */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .nav-search {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    flex: 0 0 auto !important;
+    width: 300px !important;
+    max-width: 300px !important;
+  }
+}
+
+/* Search bar: flush right on mobile and tablet */
+@media (max-width: 1099px) {
+  .nav-search {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+
+  .app-navbar {
+    padding-right: 10px !important;
+  }
+}
+
+/* ============================================================
+   About panel: social links
+   ============================================================ */
+.about-socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.about-social-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.about-social-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.about-social-link svg {
+  flex-shrink: 0;
+}
+
+/* Light mode */
+body:not(.dark) .about-social-link {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .about-social-link:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* About row icons */
+.about-row span:first-child i.ti {
+  margin-right: 6px;
+  font-size: 1.1rem;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+.side-panel-header h2 i.ti {
+  margin-right: 6px;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
+/* ============================================================
+   FIX: About row icons visible in both themes
+   ============================================================ */
+.about-row span:first-child i.ti,
+.side-panel-header h2 i.ti {
+  color: inherit !important;
+  opacity: 0.7 !important;
+  display: inline-block !important;
+  font-size: 1.2rem !important;
+}
+
+body:not(.dark) .about-row span:first-child i.ti,
+body:not(.dark) .side-panel-header h2 i.ti {
+  color: #374151 !important;
+}
+
+body.dark .about-row span:first-child i.ti,
+body.dark .side-panel-header h2 i.ti {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Make sure the label text next to icons is visible */
+body:not(.dark) .about-row span:first-child {
+  color: #4a5568 !important;
+}
+
+/* ============================================================
+   About panel: fix row layout — label left, value right
+   ============================================================ */
+.about-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0.75rem 0 !important;
+}
+
+.about-row span:first-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 0.85rem !important;
+  min-width: 0 !important;
+}
+
+.about-row span:last-child {
+  text-align: right !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+/* FIX: About row text overlap */
+.about-row span:first-child {
+  flex-shrink: 0 !important;
+  min-width: 90px !important;
+}
+
+.about-row span:last-child {
+  white-space: normal !important;
+  word-break: break-word !important;
+  flex: 1 !important;
+  text-align: right !important;
+}
+
+/* ============================================================
+   Show brand logo + text on ALL devices (mobile, tablet, desktop)
+   ============================================================ */
+.app-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.brand-text {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0px !important;
+  min-width: 0 !important;
+}
+
+.app-logo {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  display: block !important;
+}
+
+/* Mobile: smaller text */
+@media (max-width: 767px) {
+  .brand-name {
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .brand-tagline {
+    font-size: 8px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .app-logo {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .brand-name {
+    font-size: 15px !important;
+  }
+
+  .brand-tagline {
+    font-size: 9px !important;
+  }
+}
