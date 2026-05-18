@@ -239,6 +239,35 @@ const state = {
 // ---------- Dynamic background ----------
 const BG_CLASSES = ['bg-sunny', 'bg-night', 'bg-cloudy', 'bg-rainy', 'bg-snowy', 'bg-stormy'];
 
+/**
+ * Map OpenWeatherMap icon code to an emoji.
+ * Icon codes: https://openweathermap.org/weather-conditions
+ * Format: "01d" (day) or "01n" (night)
+ */
+function getWeatherEmoji(iconCode) {
+  const map = {
+    '01d': '☀️',    // clear sky day
+    '01n': '🌙',    // clear sky night
+    '02d': '⛅',    // few clouds day
+    '02n': '☁️',    // few clouds night
+    '03d': '☁️',    // scattered clouds
+    '03n': '☁️',
+    '04d': '☁️',    // broken clouds
+    '04n': '☁️',
+    '09d': '🌧️',   // shower rain
+    '09n': '🌧️',
+    '10d': '🌦️',   // rain day
+    '10n': '🌧️',   // rain night
+    '11d': '⛈️',   // thunderstorm
+    '11n': '⛈️',
+    '13d': '❄️',    // snow
+    '13n': '❄️',
+    '50d': '🌫️',   // mist/fog
+    '50n': '🌫️',
+  };
+  return map[iconCode] || '🌤️';
+}
+
 function getBgClass(weatherId, isNight) {
   if (isNight) return 'bg-night';
   const group = Math.floor(weatherId / 100);
@@ -262,6 +291,354 @@ function isNightTime(data) {
 function applyBgClass(className) {
   document.body.classList.remove(...BG_CLASSES);
   document.body.classList.add(className);
+  applyWeatherParticles(className);
+}
+
+// ---------- Weather particles ----------
+const particlesContainer = document.getElementById('weather-particles');
+const weatherCanvas = document.getElementById('weather-canvas');
+const ctx = weatherCanvas ? weatherCanvas.getContext('2d') : null;
+let particleAnimId = null;
+let particles = [];
+let currentWeatherTheme = null;
+let lightningTimer = null;
+let lightningOpacity = 0;
+
+function resizeCanvas() {
+  if (!weatherCanvas) return;
+  weatherCanvas.width = window.innerWidth;
+  weatherCanvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function applyWeatherParticles(bgClass) {
+  if (!ctx) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Stop previous animation
+  if (particleAnimId) cancelAnimationFrame(particleAnimId);
+  if (lightningTimer) clearInterval(lightningTimer);
+  particles = [];
+  lightningOpacity = 0;
+  currentWeatherTheme = bgClass;
+
+  switch (bgClass) {
+    case 'bg-night':
+      initNightParticles();
+      break;
+    case 'bg-rainy':
+      initRainParticles();
+      break;
+    case 'bg-snowy':
+      initSnowParticles();
+      break;
+    case 'bg-sunny':
+      initSunParticles();
+      break;
+    case 'bg-stormy':
+      initStormParticles();
+      break;
+    case 'bg-cloudy':
+      initCloudParticles();
+      break;
+  }
+
+  animateParticles();
+}
+
+function animateParticles() {
+  if (!ctx) return;
+  ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+
+  // Lightning flash overlay for stormy
+  if (lightningOpacity > 0) {
+    ctx.fillStyle = `rgba(255, 255, 255, ${lightningOpacity})`;
+    ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+    lightningOpacity *= 0.9;
+    if (lightningOpacity < 0.01) lightningOpacity = 0;
+  }
+
+  for (const p of particles) {
+    p.update();
+    p.draw(ctx);
+  }
+
+  particleAnimId = requestAnimationFrame(animateParticles);
+}
+
+// ---- NIGHT: Stars + shooting stars ----
+function initNightParticles() {
+  const w = weatherCanvas.width;
+  const h = weatherCanvas.height;
+
+  // Static twinkling stars
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: 1 + Math.random() * 2.5,
+      twinkleSpeed: 0.02 + Math.random() * 0.03,
+      phase: Math.random() * Math.PI * 2,
+      update() {
+        this.phase += this.twinkleSpeed;
+      },
+      draw(c) {
+        const alpha = 0.5 + Math.sin(this.phase) * 0.5;
+        c.beginPath();
+        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        c.fillStyle = `rgba(255, 255, 255, ${Math.max(0.1, alpha)})`;
+        c.shadowBlur = 4;
+        c.shadowColor = 'rgba(255, 255, 255, 0.8)';
+        c.fill();
+        c.shadowBlur = 0;
+      },
+    });
+  }
+
+  // Shooting stars (continuous)
+  for (let i = 0; i < 5; i++) {
+    particles.push(createShootingStar(w, h, i * 2));
+  }
+}
+
+function createShootingStar(w, h, delay) {
+  return {
+    x: Math.random() * w * 0.8 + w * 0.1,
+    y: Math.random() * h * 0.4,
+    speed: 4 + Math.random() * 3,
+    length: 60 + Math.random() * 40,
+    opacity: 0,
+    delay: delay,
+    timer: 0,
+    active: false,
+    update() {
+      this.timer++;
+      if (this.timer < this.delay * 60) return;
+      this.active = true;
+      this.x -= this.speed;
+      this.y += this.speed * 0.6;
+      this.opacity = Math.min(1, this.opacity + 0.05);
+
+      // Reset when off screen
+      if (this.x < -100 || this.y > weatherCanvas.height + 50) {
+        this.x = Math.random() * weatherCanvas.width * 0.8 + weatherCanvas.width * 0.1;
+        this.y = Math.random() * weatherCanvas.height * 0.3;
+        this.opacity = 0;
+        this.delay = 1 + Math.random() * 3;
+        this.timer = 0;
+        this.active = false;
+      }
+    },
+    draw(c) {
+      if (!this.active) return;
+      const gradient = c.createLinearGradient(
+        this.x, this.y,
+        this.x + this.length * 0.7, this.y - this.length * 0.4
+      );
+      gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      c.beginPath();
+      c.moveTo(this.x, this.y);
+      c.lineTo(this.x + this.length * 0.7, this.y - this.length * 0.4);
+      c.strokeStyle = gradient;
+      c.lineWidth = 1.5;
+      c.stroke();
+      // Head glow
+      c.beginPath();
+      c.arc(this.x, this.y, 2, 0, Math.PI * 2);
+      c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      c.fill();
+    },
+  };
+}
+
+// ---- RAINY: Continuous rain drops ----
+function initRainParticles() {
+  const w = weatherCanvas.width;
+  const h = weatherCanvas.height;
+
+  for (let i = 0; i < 200; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      speed: 10 + Math.random() * 8,
+      length: 20 + Math.random() * 20,
+      opacity: 0.4 + Math.random() * 0.5,
+      wind: -2,
+      width: 1.5 + Math.random() * 1,
+      update() {
+        this.y += this.speed;
+        this.x += this.wind;
+        if (this.y > weatherCanvas.height) {
+          this.y = -this.length;
+          this.x = Math.random() * weatherCanvas.width;
+        }
+        if (this.x < 0) this.x = weatherCanvas.width;
+      },
+      draw(c) {
+        c.beginPath();
+        c.moveTo(this.x, this.y);
+        c.lineTo(this.x + this.wind * 2, this.y + this.length);
+        c.strokeStyle = `rgba(174, 214, 241, ${this.opacity})`;
+        c.lineWidth = this.width;
+        c.lineCap = 'round';
+        c.stroke();
+      },
+    });
+  }
+}
+
+// ---- SNOWY: Drifting snowflakes ----
+function initSnowParticles() {
+  const w = weatherCanvas.width;
+  const h = weatherCanvas.height;
+
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: 3 + Math.random() * 5,
+      speed: 0.8 + Math.random() * 2,
+      wind: Math.random() * 0.5 - 0.25,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleSpeed: 0.02 + Math.random() * 0.02,
+      opacity: 0.6 + Math.random() * 0.4,
+      update() {
+        this.y += this.speed;
+        this.wobble += this.wobbleSpeed;
+        this.x += Math.sin(this.wobble) * 0.8 + this.wind;
+        if (this.y > weatherCanvas.height + 10) {
+          this.y = -10;
+          this.x = Math.random() * weatherCanvas.width;
+        }
+        if (this.x < -10) this.x = weatherCanvas.width + 10;
+        if (this.x > weatherCanvas.width + 10) this.x = -10;
+      },
+      draw(c) {
+        c.beginPath();
+        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        c.shadowBlur = 3;
+        c.shadowColor = 'rgba(255, 255, 255, 0.5)';
+        c.fill();
+        c.shadowBlur = 0;
+      },
+    });
+  }
+}
+
+// ---- SUNNY: Keep existing DOM-based (don't touch) ----
+function initSunParticles() {
+  // Sunny uses the existing subtle DOM particles — keep it light
+  particlesContainer.innerHTML = '';
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle-sun';
+    particle.style.cssText = `
+      position:absolute;
+      left:${Math.random() * 100}%;
+      top:${Math.random() * 100}%;
+      width:${3 + Math.random() * 4}px;
+      height:${3 + Math.random() * 4}px;
+      background:rgba(255,215,0,0.4);
+      border-radius:50%;
+      animation:sun-float ${3 + Math.random() * 4}s ease-in-out infinite;
+      animation-delay:${Math.random() * 3}s;
+      display:block !important;
+    `;
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// ---- STORMY: Heavy rain + lightning ----
+function initStormParticles() {
+  const w = weatherCanvas.width;
+  const h = weatherCanvas.height;
+
+  // Heavy rain
+  for (let i = 0; i < 250; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      speed: 14 + Math.random() * 10,
+      length: 25 + Math.random() * 25,
+      opacity: 0.3 + Math.random() * 0.5,
+      wind: -4 + Math.random() * -2,
+      width: 1.5 + Math.random() * 1,
+      update() {
+        this.y += this.speed;
+        this.x += this.wind;
+        if (this.y > weatherCanvas.height) {
+          this.y = -this.length;
+          this.x = Math.random() * weatherCanvas.width;
+        }
+        if (this.x < -20) this.x = weatherCanvas.width + 20;
+      },
+      draw(c) {
+        c.beginPath();
+        c.moveTo(this.x, this.y);
+        c.lineTo(this.x + this.wind * 1.5, this.y + this.length);
+        c.strokeStyle = `rgba(200, 220, 240, ${this.opacity})`;
+        c.lineWidth = this.width;
+        c.lineCap = 'round';
+        c.stroke();
+      },
+    });
+  }
+
+  // Lightning flashes at random intervals
+  lightningTimer = setInterval(() => {
+    if (Math.random() > 0.4) {
+      lightningOpacity = 0.25 + Math.random() * 0.3;
+      // Double flash
+      setTimeout(() => {
+        lightningOpacity = 0.15 + Math.random() * 0.25;
+      }, 80 + Math.random() * 80);
+    }
+  }, 1500 + Math.random() * 2500);
+}
+
+// ---- CLOUDY: Clouds drifting across ----
+function initCloudParticles() {
+  const w = weatherCanvas.width;
+  const h = weatherCanvas.height;
+
+  for (let i = 0; i < 10; i++) {
+    particles.push({
+      x: Math.random() * w - 200,
+      y: 30 + Math.random() * (h * 0.5),
+      width: 200 + Math.random() * 250,
+      height: 50 + Math.random() * 40,
+      speed: 0.3 + Math.random() * 0.5,
+      opacity: 0.08 + Math.random() * 0.1,
+      update() {
+        this.x += this.speed;
+        if (this.x > weatherCanvas.width + 300) {
+          this.x = -this.width - 100;
+          this.y = 30 + Math.random() * (weatherCanvas.height * 0.5);
+        }
+      },
+      draw(c) {
+        const cx = this.x + this.width / 2;
+        const cy = this.y + this.height / 2;
+        c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        // Main body
+        c.beginPath();
+        c.ellipse(cx, cy, this.width / 2, this.height / 2, 0, 0, Math.PI * 2);
+        c.fill();
+        // Left bump
+        c.beginPath();
+        c.ellipse(cx - this.width * 0.25, cy + 8, this.width * 0.3, this.height * 0.5, 0, 0, Math.PI * 2);
+        c.fill();
+        // Right bump
+        c.beginPath();
+        c.ellipse(cx + this.width * 0.2, cy - 5, this.width * 0.35, this.height * 0.55, 0, 0, Math.PI * 2);
+        c.fill();
+      },
+    });
+  }
 }
 
 // ---------- Unit helpers ----------
@@ -536,9 +913,9 @@ function renderWeather(data) {
   animateStatBar(uvFillEl, uv != null ? Math.min((uv / 11) * 100, 100) : 0);
   animateStatBar(visibilityFillEl, visibilityKm != null ? (visibilityKm / 10) * 100 : 0);
 
-  // Crossfade weather icon
-  const newIconSrc = ICON_URL.replace('{icon}', condition.icon);
-  crossfadeImage(weatherIconEl, newIconSrc, condition.description || 'Weather icon');
+  // Weather emoji instead of image
+  weatherIconEl.textContent = getWeatherEmoji(condition.icon);
+  weatherIconEl.setAttribute('aria-label', condition.description || 'Weather');
 
   // Sunrise/sunset arc
   renderSunArc(data);
@@ -593,18 +970,16 @@ function renderForecast(days) {
     day.className = 'day';
     day.textContent = dayFmt.format(date);
 
-    const img = document.createElement('img');
-    img.src = ICON_URL.replace('{icon}', entry.icon);
-    img.alt = entry.description || 'Forecast icon';
-    img.loading = 'lazy';
-    img.width = 48;
-    img.height = 48;
+    const emoji = document.createElement('span');
+    emoji.className = 'forecast-emoji';
+    emoji.textContent = getWeatherEmoji(entry.icon);
+    emoji.setAttribute('aria-hidden', 'true');
 
     const temp = document.createElement('span');
     temp.className = 'temp';
     temp.textContent = `${formatTemp(entry.max)} / ${formatTemp(entry.min)}`;
 
-    li.append(day, img, temp);
+    li.append(day, emoji, temp);
     fragment.append(li);
   }
 
@@ -628,9 +1003,9 @@ function renderHourly(list) {
 
   const fragment = document.createDocumentFragment();
   const timeFmt = new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
+    hour: 'numeric',
     minute: '2-digit',
-    hour12: false,
+    hour12: true,
   });
 
   for (const entry of state.hourlyEntries) {
@@ -642,18 +1017,16 @@ function renderHourly(list) {
     time.className = 'hour-time';
     time.textContent = timeFmt.format(new Date(entry.dt * 1000));
 
-    const img = document.createElement('img');
-    img.src = ICON_URL.replace('{icon}', entry.icon);
-    img.alt = entry.description || 'Hourly forecast icon';
-    img.loading = 'lazy';
-    img.width = 28;
-    img.height = 28;
+    const emoji = document.createElement('span');
+    emoji.className = 'hour-emoji';
+    emoji.textContent = getWeatherEmoji(entry.icon);
+    emoji.setAttribute('aria-hidden', 'true');
 
     const temp = document.createElement('span');
     temp.className = 'hour-temp';
     temp.textContent = formatTemp(entry.temp);
 
-    card.append(time, img, temp);
+    card.append(time, emoji, temp);
     fragment.append(card);
   }
 
@@ -837,9 +1210,11 @@ function formatTimeFromUnix(unix, tzOffsetSec = 0) {
   const ms = (unix + tzOffsetSec) * 1000;
   const d = new Date(ms);
   // Use UTC getters because we already shifted by the offset.
-  const hh = String(d.getUTCHours()).padStart(2, '0');
-  const mm = String(d.getUTCMinutes()).padStart(2, '0');
-  return `${hh}:${mm}`;
+  let hours = d.getUTCHours();
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+  const period = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // convert 0 → 12, 13 → 1, etc.
+  return `${hours}:${minutes} ${period}`;
 }
 
 function renderSunArc(data) {
@@ -1585,6 +1960,7 @@ initSidebar();
 initNavbarAutoHide();
 initClearHistory();
 autoFetchLocation();
+initSidebarPanels();
 
 /**
  * Clear history button
@@ -1596,46 +1972,53 @@ function initClearHistory() {
 }
 
 /**
- * Auto-fetch weather using geolocation on page load.
- * Silently fails if permission is denied — user can still search manually.
+ * Show an animated notification prompting the user to tap the geo button.
+ * Does NOT auto-fetch location.
  */
 function autoFetchLocation() {
-  if (!('geolocation' in navigator)) return;
+  // Don't show if user already has data from a previous session
+  if (state.lastQuery) return;
 
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      const { latitude: lat, longitude: lon } = position.coords;
-      setLoading(true);
-      try {
-        const [weather, forecast] = await Promise.all([
-          fetchWeatherByCoords(lat, lon),
-          fetchForecastByCoords(lat, lon),
-        ]);
-        renderWeather(weather);
-        renderHourly(forecast.list);
-        renderForecast(pickDailyEntries(forecast.list));
-        saveHistory(weather.name, weather.sys?.country);
-        state.lastQuery = { type: 'coords', value: { lat, lon } };
+  // Create the notification toast
+  const toast = document.createElement('div');
+  toast.id = 'geo-toast';
+  toast.className = 'geo-toast';
+  toast.innerHTML = `
+    <span class="geo-toast-icon">📍</span>
+    <span class="geo-toast-text">Tap the <strong>⊕</strong> button in the search bar to use your current location</span>
+    <button class="geo-toast-close" aria-label="Dismiss">&times;</button>
+  `;
+  document.body.appendChild(toast);
 
-        try {
-          const aqi = await fetchAirPollution(lat, lon);
-          renderAQI(aqi);
-        } catch {
-          // AQI not critical
-        }
-      } catch (err) {
-        // Silently fail — user can search manually
-        console.warn('Auto-location fetch failed:', err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    () => {
-      // Permission denied or error — do nothing, user can search manually
-    },
-    { enableHighAccuracy: false, timeout: 8000, maximumAge: 5 * 60 * 1000 }
-  );
+  // Animate in after a short delay (let splash finish first)
+  setTimeout(() => toast.classList.add('visible'), 2800);
+
+  // Auto-dismiss after 8 seconds
+  const autoDismiss = setTimeout(() => dismissGeoToast(toast), 8000);
+
+  // Close on click
+  toast.querySelector('.geo-toast-close').addEventListener('click', () => {
+    clearTimeout(autoDismiss);
+    dismissGeoToast(toast);
+  });
+
+  // Also dismiss when user clicks the geo button
+  const geoBtn = document.getElementById('geo-btn');
+  if (geoBtn) {
+    geoBtn.addEventListener('click', () => {
+      clearTimeout(autoDismiss);
+      dismissGeoToast(toast);
+    }, { once: true });
+  }
 }
+
+function dismissGeoToast(toast) {
+  if (!toast) return;
+  toast.classList.remove('visible');
+  toast.classList.add('hiding');
+  setTimeout(() => toast.remove(), 400);
+}
+
 
 /**
  * Auto-hide navbar on scroll down, show on scroll up.
@@ -1646,7 +2029,7 @@ function initNavbarAutoHide() {
 
   let lastScrollY = window.scrollY;
   let ticking = false;
-  const THRESHOLD = 60; // px scrolled before hiding
+  const THRESHOLD = 30; // px scrolled before hiding (faster response)
 
   function onScroll() {
     const currentY = window.scrollY;
@@ -1780,4 +2163,212 @@ function initSplash() {
   } else {
     start();
   }
+}
+
+// ---------- Sidebar panels ----------
+function initSidebarPanels() {
+  const backdrop = document.getElementById('panel-backdrop');
+
+  // Open panel helper
+  function openPanel(id) {
+    closeAllPanels();
+    const panel = document.getElementById(`panel-${id}`);
+    if (!panel) return;
+    panel.hidden = false;
+    panel.style.visibility = 'visible';
+    panel.style.pointerEvents = 'auto';
+    backdrop.hidden = false;
+    backdrop.style.visibility = 'visible';
+    backdrop.style.pointerEvents = 'auto';
+    // Populate content
+    if (id === 'favorites') renderFavoritesPanel();
+    if (id === 'history') renderHistoryPanel();
+    if (id === 'settings') syncSettingsPanel();
+  }
+
+  function closeAllPanels() {
+    ['favorites', 'history', 'settings', 'about'].forEach((id) => {
+      const p = document.getElementById(`panel-${id}`);
+      if (p) {
+        p.hidden = true;
+        p.style.visibility = 'hidden';
+        p.style.pointerEvents = 'none';
+      }
+    });
+    backdrop.hidden = true;
+    backdrop.style.visibility = 'hidden';
+    backdrop.style.pointerEvents = 'none';
+  }
+
+  // Close buttons
+  document.querySelectorAll('.side-panel-close').forEach((btn) => {
+    btn.addEventListener('click', closeAllPanels);
+  });
+
+  // Backdrop click closes
+  backdrop.addEventListener('click', closeAllPanels);
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllPanels();
+  });
+
+  // Wire sidebar nav links
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    sidebar.querySelectorAll('.sidebar-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const action = link.dataset.action;
+
+        // Close the sidebar first
+        const menuBtn = document.getElementById('menu-btn');
+        sidebar.classList.remove('open');
+        document.getElementById('sidebar-backdrop')?.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        menuBtn?.setAttribute('aria-expanded', 'false');
+
+        switch (action) {
+          case 'home':
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+          case 'favorites':
+            openPanel('favorites');
+            break;
+          case 'history':
+            openPanel('history');
+            break;
+          case 'settings':
+            openPanel('settings');
+            break;
+          case 'about':
+            openPanel('about');
+            break;
+        }
+      });
+    });
+  }
+
+  // ---- Favorites panel ----
+  function renderFavoritesPanel() {
+    const list = document.getElementById('favorites-list');
+    const empty = document.getElementById('favorites-empty');
+    list.replaceChildren();
+
+    if (state.favorites.length === 0) {
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    state.favorites.forEach((entry) => {
+      const name = entryName(entry);
+      const li = document.createElement('li');
+
+      const nameBtn = document.createElement('span');
+      nameBtn.className = 'item-name';
+      nameBtn.textContent = `⭐ ${name}`;
+      nameBtn.addEventListener('click', () => {
+        cityInput.value = name;
+        handleSearch();
+        closeAllPanels();
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'item-delete';
+      delBtn.textContent = '✕';
+      delBtn.setAttribute('aria-label', `Remove ${name} from favorites`);
+      delBtn.addEventListener('click', () => {
+        state.favorites = state.favorites.filter(
+          (f) => entryName(f).toLowerCase() !== name.toLowerCase()
+        );
+        localStorage.setItem('favorites', JSON.stringify(state.favorites));
+        syncFavoriteBtn();
+        renderHistory();
+        renderFavoritesPanel();
+      });
+
+      li.append(nameBtn, delBtn);
+      list.append(li);
+    });
+  }
+
+  // ---- History panel ----
+  function renderHistoryPanel() {
+    const list = document.getElementById('history-panel-list');
+    const empty = document.getElementById('history-panel-empty');
+    list.replaceChildren();
+
+    if (state.history.length === 0) {
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    state.history.forEach((entry) => {
+      const name = entryName(entry);
+      const li = document.createElement('li');
+
+      const nameBtn = document.createElement('span');
+      nameBtn.className = 'item-name';
+      nameBtn.textContent = `🕐 ${name}`;
+      nameBtn.addEventListener('click', () => {
+        cityInput.value = name;
+        handleSearch();
+        closeAllPanels();
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'item-delete';
+      delBtn.textContent = '✕';
+      delBtn.setAttribute('aria-label', `Remove ${name} from history`);
+      delBtn.addEventListener('click', () => {
+        state.history = state.history.filter(
+          (h) => entryName(h).toLowerCase() !== name.toLowerCase()
+        );
+        localStorage.setItem('history', JSON.stringify(state.history));
+        renderHistory();
+        renderHistoryPanel();
+      });
+
+      li.append(nameBtn, delBtn);
+      list.append(li);
+    });
+  }
+
+  // Clear all history from panel
+  document.getElementById('clear-all-history-btn')?.addEventListener('click', () => {
+    clearHistory();
+    renderHistoryPanel();
+  });
+
+  // ---- Settings panel ----
+  function syncSettingsPanel() {
+    const unitBtn = document.getElementById('settings-unit-btn');
+    const themeBtn = document.getElementById('settings-theme-btn');
+    if (unitBtn) unitBtn.textContent = state.unit === 'C' ? '°C → Switch to °F' : '°F → Switch to °C';
+    if (themeBtn) themeBtn.textContent = document.body.classList.contains('dark') ? '🌙 Dark → Light' : '☀️ Light → Dark';
+  }
+
+  document.getElementById('settings-unit-btn')?.addEventListener('click', () => {
+    toggleUnit();
+    syncSettingsPanel();
+  });
+
+  document.getElementById('settings-theme-btn')?.addEventListener('click', () => {
+    toggleTheme();
+    syncSettingsPanel();
+  });
+
+  document.getElementById('settings-clear-btn')?.addEventListener('click', () => {
+    if (confirm('Clear all history and favorites?')) {
+      clearHistory();
+      state.favorites = [];
+      localStorage.removeItem('favorites');
+      syncFavoriteBtn();
+      renderHistory();
+      syncSettingsPanel();
+      showError('All data cleared.');
+    }
+  });
 }

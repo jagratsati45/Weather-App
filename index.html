@@ -9,7 +9,8 @@
   <title>Weather View — Your Sky, Your Way</title>
 
   <!-- ===== Favicons ===== -->
-  <link rel="icon" type="image/svg+xml" href="assets/weather-view-icon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/weather-view-favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/weather-view-icon.svg" sizes="any" />
   <link rel="alternate icon" type="image/png" href="assets/weather-view-icon.png" />
   <link rel="apple-touch-icon" href="assets/weather-view-icon.png" />
   <link rel="mask-icon" href="assets/weather-view-icon.svg" color="#2b86c5" />
@@ -183,6 +184,84 @@
     <div class="sidebar-footer">Made with Weather View</div>
   </aside>
 
+  <!-- ===== Sidebar panels ===== -->
+
+  <!-- Favorites panel -->
+  <div id="panel-favorites" class="side-panel" hidden aria-label="Favorites" role="dialog">
+    <div class="side-panel-inner">
+      <div class="side-panel-header">
+        <h2>⭐ Favorites</h2>
+        <button class="side-panel-close" data-panel="favorites" aria-label="Close">✕</button>
+      </div>
+      <ul id="favorites-list" class="side-panel-list"></ul>
+      <p id="favorites-empty" class="side-panel-empty">No favorites yet. Star a city to save it here.</p>
+    </div>
+  </div>
+
+  <!-- Search History panel -->
+  <div id="panel-history" class="side-panel" hidden aria-label="Search History" role="dialog">
+    <div class="side-panel-inner">
+      <div class="side-panel-header">
+        <h2>🕐 Search History</h2>
+        <button class="side-panel-close" data-panel="history" aria-label="Close">✕</button>
+      </div>
+      <ul id="history-panel-list" class="side-panel-list"></ul>
+      <p id="history-panel-empty" class="side-panel-empty">No search history yet.</p>
+      <button id="clear-all-history-btn" class="side-panel-action-btn danger">🗑 Clear All History</button>
+    </div>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="panel-settings" class="side-panel" hidden aria-label="Settings" role="dialog">
+    <div class="side-panel-inner">
+      <div class="side-panel-header">
+        <h2>⚙️ Settings</h2>
+        <button class="side-panel-close" data-panel="settings" aria-label="Close">✕</button>
+      </div>
+      <div class="settings-list">
+        <div class="settings-row">
+          <span class="settings-label">Temperature Unit</span>
+          <button id="settings-unit-btn" class="settings-toggle-btn">°C / °F</button>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Theme</span>
+          <button id="settings-theme-btn" class="settings-toggle-btn">Light / Dark</button>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Clear All Data</span>
+          <button id="settings-clear-btn" class="settings-toggle-btn danger">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About panel -->
+  <div id="panel-about" class="side-panel" hidden aria-label="About" role="dialog">
+    <div class="side-panel-inner">
+      <div class="side-panel-header">
+        <h2>ℹ️ About</h2>
+        <button class="side-panel-close" data-panel="about" aria-label="Close">✕</button>
+      </div>
+      <div class="about-content">
+        <img src="assets/weather-view-icon.svg" alt="Weather View" width="72" height="72" style="border-radius:16px;margin:0 auto 1rem;display:block;">
+        <h3 style="text-align:center;font-size:1.2rem;font-weight:700;margin-bottom:0.25rem;">Weather View</h3>
+        <p style="text-align:center;opacity:0.6;font-size:0.8rem;margin-bottom:1.5rem;">v1.0 — Your Sky. Your Way.</p>
+        <div class="about-row"><span>🌐 Data</span><span>OpenWeatherMap API</span></div>
+        <div class="about-row"><span>⚡ Built with</span><span>Vanilla JS, HTML, CSS</span></div>
+        <div class="about-row"><span>🎨 Icons</span><span>Tabler Icons + Emojis</span></div>
+        <div class="about-row"><span>📦 Version</span><span>1.0.0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel backdrop -->
+  <div id="panel-backdrop" class="panel-backdrop" hidden></div>
+
+  <!-- Weather particles (animated background effects) -->
+  <div id="weather-particles" aria-hidden="true">
+    <canvas id="weather-canvas"></canvas>
+  </div>
+
   <!-- Pull-to-refresh indicator -->
   <div id="ptr-indicator" class="ptr-indicator" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -333,7 +412,7 @@
       </header>
 
       <figure>
-        <img id="weather-icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="Weather icon placeholder" />
+        <span id="weather-icon" class="weather-emoji" aria-label="Weather icon">🌤️</span>
         <figcaption id="condition" aria-label="Weather condition">Enter a city above</figcaption>
       </figure>
 

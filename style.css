@@ -3409,3 +3409,1784 @@ section[aria-label="5-day forecast"].has-data,
     height: 14px !important;
   }
 }
+
+/* ============================================================
+   NAVBAR SEARCH: icon left, input center, geo circle right
+   ============================================================ */
+
+/* The search form pill container */
+.nav-search-form {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  height: 40px !important;
+  padding: 0 5px 0 5px !important;
+  gap: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  overflow: hidden !important;
+}
+
+/* Search magnifier icon — small circle on the left */
+.nav-search-icon {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin-right: 6px !important;
+}
+
+.nav-search-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Input field — takes remaining space */
+.nav-search-form #city-input {
+  flex: 1 1 0% !important;
+  min-width: 50px !important;
+  height: 100% !important;
+  padding: 0 6px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  font-size: 0.88rem !important;
+  outline: none !important;
+}
+
+/* Geo button — small circle on the right */
+.nav-geo-btn {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin-left: 4px !important;
+}
+
+.nav-geo-btn svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Hover states */
+.nav-search-icon:hover,
+.nav-geo-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ============================================================
+   Weather icon: better rendering for OWM icons
+   ============================================================ */
+#weather-card figure {
+  position: relative;
+}
+
+#weather-icon {
+  width: 100px !important;
+  height: 100px !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  object-fit: contain !important;
+  border-radius: 50%;
+  padding: 0;
+  background: none;
+}
+
+@media (min-width: 768px) {
+  #weather-icon {
+    width: 120px !important;
+    height: 120px !important;
+    min-width: 120px !important;
+    min-height: 120px !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE: All devices — mobile, tablet, desktop
+   This is the FINAL responsive override. Single source of truth.
+   ============================================================ */
+
+/* ---- Base: single column for everything under 900px ---- */
+@media (max-width: 899px) {
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    max-width: 600px !important;
+    margin: 70px auto 0 !important;
+    padding: 0 1rem !important;
+    width: 100% !important;
+  }
+
+  main > * {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* AQI, tips — full width stacked */
+  #aqi-widget,
+  #tips-widget {
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+
+  /* Hourly strip scrolls horizontally */
+  .hourly-strip {
+    overflow-x: auto !important;
+  }
+
+  /* Forecast: 2-col grid on tablets, scrollable row on small phones */
+  #forecast {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+    gap: 0.6rem !important;
+    overflow: visible !important;
+  }
+
+  #forecast > li {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ---- Small phones (under 480px): tighter spacing ---- */
+@media (max-width: 479px) {
+  main {
+    max-width: 100% !important;
+    padding: 0 0.75rem !important;
+    margin-top: 60px !important;
+  }
+
+  #forecast {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ---- Tablets (480px - 899px): comfortable single column ---- */
+@media (min-width: 480px) and (max-width: 899px) {
+  main {
+    max-width: 640px !important;
+    padding: 0 1.5rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  #forecast {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+
+  .hourly-strip {
+    gap: 10px !important;
+  }
+}
+
+/* ---- Desktop (900px+): 2-column grid ---- */
+@media (min-width: 900px) {
+  main {
+    display: grid !important;
+    grid-template-columns: 1fr 320px !important;
+    grid-template-rows: auto !important;
+    gap: 1.25rem !important;
+    max-width: 1000px !important;
+    margin: 80px auto 0 !important;
+    padding: 0 2rem !important;
+    align-items: start !important;
+  }
+
+  /* History spans full width */
+  .history-section {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Error spans full width */
+  #error-msg {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Weather card: left column */
+  #weather-card {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  /* AQI: right column, row 2 */
+  #aqi-widget {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start !important;
+  }
+
+  /* Tips: right column, row 3 */
+  #tips-widget {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    align-self: start !important;
+  }
+
+  /* Hourly: full width */
+  section[aria-label="Hourly forecast"] {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Forecast: full width, 5-col grid */
+  section[aria-label="5-day forecast"] {
+    grid-column: 1 / -1 !important;
+  }
+
+  #forecast {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 0.75rem !important;
+    overflow: visible !important;
+  }
+
+  #forecast > li {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ---- Wide desktop (1100px+) ---- */
+@media (min-width: 1100px) {
+  main {
+    max-width: 1100px !important;
+    grid-template-columns: 1fr 360px !important;
+  }
+}
+
+/* ---- Ultra-wide (1400px+) ---- */
+@media (min-width: 1400px) {
+  main {
+    max-width: 1200px !important;
+  }
+}
+
+/* ============================================================
+   TABLET FIX ONLY: force single column at 900-1023px
+   Does not affect mobile (<900px) or desktop (1024px+)
+   ============================================================ */
+@media (min-width: 900px) and (max-width: 1023px) {
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    max-width: 700px !important;
+    margin: 80px auto 0 !important;
+  }
+
+  main > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+
+  #aqi-widget,
+  #tips-widget {
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+
+  #forecast {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+}
+
+/* ============================================================
+   TABLET (iPad) FIX: 768px - 1099px
+   Grid with proper placement, no overlaps
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 1099px) {
+  main {
+    display: grid !important;
+    grid-template-columns: 1fr 260px !important;
+    grid-template-rows: auto auto auto auto auto !important;
+    gap: 1rem !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 70px auto 0 !important;
+    padding: 0 1rem !important;
+    align-items: start !important;
+  }
+
+  /* Row 1: history full width */
+  .history-section {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  /* Row 2: weather card left, AQI right */
+  #weather-card {
+    grid-column: 1 !important;
+    grid-row: 2 / 4 !important; /* span 2 rows so it aligns with AQI + tips */
+    width: 100% !important;
+  }
+
+  #aqi-widget {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Row 3: tips in right column */
+  #tips-widget {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    align-self: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Row 4: hourly — FULL WIDTH edge to edge */
+  section[aria-label="Hourly forecast"] {
+    grid-column: 1 / -1 !important;
+    grid-row: 4 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hourly-strip {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Row 5: forecast — FULL WIDTH */
+  section[aria-label="5-day forecast"] {
+    grid-column: 1 / -1 !important;
+    grid-row: 5 !important;
+    width: 100% !important;
+  }
+
+  #forecast {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    width: 100% !important;
+  }
+
+  /* Error message full width */
+  #error-msg {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* ============================================================
+   TABLET: Hourly strip full width stretch to right edge
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 1099px) {
+  section[aria-label="Hourly forecast"] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+  }
+
+  .hourly-strip {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    gap: 8px !important;
+  }
+
+  .hour-card {
+    flex: 1 1 0% !important;
+    min-width: 60px !important;
+    width: auto !important;
+  }
+}
+
+/* ============================================================
+   Weather emojis
+   ============================================================ */
+.weather-emoji {
+  font-size: 72px;
+  line-height: 1;
+  display: block;
+  text-align: center;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
+@media (min-width: 768px) {
+  .weather-emoji {
+    font-size: 88px;
+  }
+}
+
+.hour-emoji {
+  font-size: 22px;
+  line-height: 1;
+  display: block;
+  text-align: center;
+}
+
+.forecast-emoji {
+  font-size: 32px;
+  line-height: 1;
+  display: block;
+  text-align: center;
+  margin: 0.25rem 0;
+}
+
+/* ============================================================
+   DESKTOP: Tips in right column + hourly/forecast full width
+   ============================================================ */
+@media (min-width: 900px) {
+  main {
+    grid-template-columns: 1fr 320px !important;
+    grid-template-rows: auto !important;
+  }
+
+  /* Row 1: history */
+  .history-section {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  /* Row 2-3: weather card spans left, AQI top-right */
+  #weather-card {
+    grid-column: 1 !important;
+    grid-row: 2 / 5 !important;
+  }
+
+  /* AQI: right column row 2 */
+  #aqi-widget {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start !important;
+  }
+
+  /* Tips (What to Wear): right column row 3 — moved UP next to card */
+  #tips-widget {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    align-self: start !important;
+  }
+
+  /* Hourly: full width, row 5 */
+  section[aria-label="Hourly forecast"] {
+    grid-column: 1 / -1 !important;
+    grid-row: 5 !important;
+  }
+
+  /* Forecast: full width, row 6 */
+  section[aria-label="5-day forecast"] {
+    grid-column: 1 / -1 !important;
+    grid-row: 6 !important;
+  }
+
+  /* Make hourly and forecast stretch full width */
+  .hourly-strip {
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .hour-card {
+    flex: 1 1 0% !important;
+    min-width: 70px !important;
+  }
+
+  #forecast {
+    width: 100% !important;
+  }
+
+  #forecast > li {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (min-width: 1100px) {
+  main {
+    grid-template-columns: 1fr 360px !important;
+  }
+
+  .hour-card {
+    min-width: 80px !important;
+  }
+}
+
+/* ============================================================
+   Hourly cards: same size as 5-day forecast cards
+   ============================================================ */
+.hour-card {
+  padding: 0.85rem 0.6rem !important;
+  min-height: 110px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+}
+
+.hour-emoji {
+  font-size: 28px !important;
+  margin: 0.2rem 0 !important;
+}
+
+.hour-time {
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+}
+
+.hour-temp {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   DESKTOP: Wider layout — card + right column fill viewport
+   ============================================================ */
+@media (min-width: 900px) {
+  main {
+    max-width: 1200px !important;
+    padding: 0 2.5rem !important;
+    grid-template-columns: 1fr 380px !important;
+    gap: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1100px) {
+  main {
+    max-width: 1300px !important;
+    grid-template-columns: 1fr 400px !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  main {
+    max-width: 1440px !important;
+    padding: 0 3rem !important;
+    grid-template-columns: 1fr 420px !important;
+  }
+}
+
+/* ============================================================
+   Geo location toast notification
+   ============================================================ */
+.geo-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  opacity: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  max-width: 420px;
+  width: calc(100% - 2rem);
+  border-radius: 14px;
+  background: rgba(10, 37, 64, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s ease;
+}
+
+.geo-toast.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.geo-toast.hiding {
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+}
+
+.geo-toast-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  animation: geo-toast-bounce 1.5s ease infinite;
+}
+
+@keyframes geo-toast-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.geo-toast-text {
+  flex: 1;
+}
+
+.geo-toast-text strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.85rem;
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
+.geo-toast-close {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.geo-toast-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-toast-icon {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   LIGHT MODE: softer, easier on the eyes
+   ============================================================ */
+body:not(.dark) {
+  background: linear-gradient(180deg, #e8f4f8 0%, #d4e8f0 50%, #c5dde8 100%) !important;
+  background-attachment: fixed !important;
+  animation: none !important;
+}
+
+/* Override the weather gradient backgrounds in light mode */
+body:not(.dark).bg-sunny {
+  background: linear-gradient(135deg, #fef9e7 0%, #fdeaa8 35%, #b8e6f0 65%, #87ceeb 100%) !important;
+  animation: none !important;
+}
+
+body:not(.dark).bg-night {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a6fa5 100%) !important;
+  animation: none !important;
+}
+
+body:not(.dark).bg-cloudy {
+  background: linear-gradient(135deg, #dfe6e9 0%, #b2bec3 55%, #a4b0be 100%) !important;
+  animation: none !important;
+}
+
+body:not(.dark).bg-rainy {
+  background: linear-gradient(135deg, #c8d6e5 0%, #8395a7 55%, #576574 100%) !important;
+  animation: none !important;
+}
+
+body:not(.dark).bg-snowy {
+  background: linear-gradient(135deg, #f5f6fa 0%, #dcdde1 55%, #c8d6e5 100%) !important;
+  animation: none !important;
+}
+
+body:not(.dark).bg-stormy {
+  background: linear-gradient(135deg, #636e72 0%, #4a5568 50%, #2d3748 100%) !important;
+  animation: none !important;
+}
+
+/* Cards in light mode: softer glass with dark text */
+body:not(.dark) #weather-card,
+body:not(.dark) #aqi-widget,
+body:not(.dark) #tips-widget,
+body:not(.dark) .hour-card,
+body:not(.dark) #forecast > li {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Text in light mode: dark for readability */
+body:not(.dark) #weather-card #city-name,
+body:not(.dark) #weather-card #temperature,
+body:not(.dark) #weather-card #condition,
+body:not(.dark) .stat-label,
+body:not(.dark) .stat-value,
+body:not(.dark) .hour-time,
+body:not(.dark) .hour-temp,
+body:not(.dark) #forecast .day,
+body:not(.dark) #forecast .temp,
+body:not(.dark) .aqi-label,
+body:not(.dark) .aqi-title,
+body:not(.dark) .aqi-pill-label,
+body:not(.dark) .aqi-pill-value,
+body:not(.dark) .aqi-pill-unit,
+body:not(.dark) .tips-label,
+body:not(.dark) .tip-pill,
+body:not(.dark) .section-title,
+body:not(.dark) section[aria-label="5-day forecast"] h2,
+body:not(.dark) .sun-times,
+body:not(.dark) #sunrise-time,
+body:not(.dark) #sunset-time,
+body:not(.dark) .sun-label {
+  color: #1a2a3a !important;
+  text-shadow: none !important;
+}
+
+/* Slightly muted secondary text */
+body:not(.dark) #weather-card #condition,
+body:not(.dark) .stat-label,
+body:not(.dark) .aqi-pill-label,
+body:not(.dark) .aqi-pill-unit,
+body:not(.dark) .tips-label,
+body:not(.dark) .sun-label,
+body:not(.dark) .hour-time {
+  color: #4a5568 !important;
+}
+
+/* Stat bars track in light mode */
+body:not(.dark) .stat-bar {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Stat row tiles */
+body:not(.dark) .stat-row {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* AQI pills */
+body:not(.dark) .aqi-pill {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Tip pills */
+body:not(.dark) .tip-pill {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #1a2a3a !important;
+}
+
+/* History pills */
+body:not(.dark) .history-pill {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #1a2a3a !important;
+}
+
+/* Navbar in light mode */
+body:not(.dark) .app-navbar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+body:not(.dark) .app-navbar .brand-name,
+body:not(.dark) .app-navbar .brand-tagline {
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .app-navbar .brand-tagline {
+  color: #64748b !important;
+}
+
+body:not(.dark) .menu-btn,
+body:not(.dark) #unit-toggle,
+body:not(.dark) #theme-toggle {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .nav-search-form {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body:not(.dark) .nav-search-form #city-input {
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .nav-search-form #city-input::placeholder {
+  color: #64748b !important;
+}
+
+body:not(.dark) .nav-search-icon,
+body:not(.dark) .nav-geo-btn {
+  background: rgba(0, 0, 0, 0.06) !important;
+  color: #1a2a3a !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Sun arc in light mode */
+body:not(.dark) #sun-arc-bg {
+  stroke: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Clear history button */
+body:not(.dark) .clear-history-btn {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #4a5568 !important;
+}
+
+/* Footer */
+body:not(.dark) footer {
+  color: #4a5568 !important;
+}
+
+/* ============================================================
+   LIGHT MODE: All section cards white like the weather card
+   ============================================================ */
+body:not(.dark) section[aria-label="Hourly forecast"],
+body:not(.dark) section[aria-label="5-day forecast"] {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 1.25rem !important;
+}
+
+/* Hourly cards inside the white section — subtle inner tiles */
+body:not(.dark) .hour-card {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
+}
+
+/* Forecast cards inside the white section — subtle inner tiles */
+body:not(.dark) #forecast > li {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
+}
+
+/* Section titles inside the white cards */
+body:not(.dark) .section-title,
+body:not(.dark) section[aria-label="5-day forecast"] h2 {
+  color: #1a2a3a !important;
+}
+
+/* ============================================================
+   LIGHT MODE: Make ALL cards solid white like the weather card
+   ============================================================ */
+body:not(.dark) #aqi-widget,
+body:not(.dark) #tips-widget,
+body:not(.dark) section[aria-label="Hourly forecast"],
+body:not(.dark) section[aria-label="5-day forecast"] {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+body:not(.dark) #weather-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ============================================================
+   LIGHT MODE: All card text dark and clearly visible
+   ============================================================ */
+body:not(.dark) #aqi-widget,
+body:not(.dark) #aqi-widget *,
+body:not(.dark) #tips-widget,
+body:not(.dark) #tips-widget *,
+body:not(.dark) section[aria-label="Hourly forecast"],
+body:not(.dark) section[aria-label="Hourly forecast"] *,
+body:not(.dark) section[aria-label="5-day forecast"],
+body:not(.dark) section[aria-label="5-day forecast"] * {
+  color: #1a2a3a !important;
+  text-shadow: none !important;
+}
+
+/* Secondary/muted text slightly lighter */
+body:not(.dark) .aqi-title,
+body:not(.dark) .aqi-pill-unit,
+body:not(.dark) .tips-label,
+body:not(.dark) .hour-time,
+body:not(.dark) .section-title {
+  color: #4a5568 !important;
+}
+
+/* AQI badge text stays white (it's on a colored background) */
+body:not(.dark) .aqi-badge,
+body:not(.dark) .aqi-badge * {
+  color: #ffffff !important;
+}
+
+/* ============================================================
+   FIX: Hide sidebar completely when closed (no bleed/shadow)
+   ============================================================ */
+.sidebar:not(.open) {
+  transform: translateX(-100%) !important;
+  box-shadow: none !important;
+  visibility: hidden !important;
+}
+
+.sidebar.open {
+  visibility: visible !important;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ============================================================
+   ERROR TOAST: improved animation + positioning
+   ============================================================ */
+#error-msg {
+  position: fixed !important;
+  top: 80px !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(-20px) !important;
+  opacity: 0 !important;
+  z-index: 150 !important;
+  width: auto !important;
+  max-width: 420px !important;
+  min-width: 280px !important;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  background: rgba(220, 53, 69, 0.95) !important;
+  color: #ffffff !important;
+  font-size: 0.88rem !important;
+  text-align: center !important;
+  box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3) !important;
+  pointer-events: none !important;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.35s ease !important;
+}
+
+#error-msg:not([hidden]) {
+  transform: translateX(-50%) translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+#error-msg[hidden] {
+  display: block !important;
+  visibility: hidden !important;
+}
+
+/* ============================================================
+   DESKTOP (768px+): Hide sidebar hamburger + geo toast
+   ============================================================ */
+@media (min-width: 768px) {
+  /* Hide the geo location toast on desktop — not needed */
+  .geo-toast {
+    display: none !important;
+  }
+
+  /* Keep hamburger but optional — hide if you want cleaner desktop nav */
+  /* .menu-btn { display: none !important; } */
+}
+
+/* ============================================================
+   ERROR TOAST: slide from right, compact, non-blocking
+   ============================================================ */
+#error-msg {
+  position: fixed !important;
+  top: 80px !important;
+  right: 16px !important;
+  left: auto !important;
+  transform: translateX(120%) !important;
+  opacity: 0 !important;
+  z-index: 150 !important;
+  width: auto !important;
+  max-width: 320px !important;
+  min-width: 200px !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  background: rgba(30, 30, 40, 0.88) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8d7da !important;
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2) !important;
+  pointer-events: none !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s ease !important;
+}
+
+#error-msg:not([hidden]) {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+#error-msg[hidden] {
+  display: block !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#error-msg p {
+  margin: 0 !important;
+}
+
+/* ============================================================
+   WEATHER ANIMATED THEMES — particles/effects per condition
+   ============================================================ */
+
+/* Container for weather particles */
+#weather-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Ensure main content stays above particles */
+.app-navbar,
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- NIGHT: Shooting stars ---- */
+.particle-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: star-shoot linear infinite;
+}
+
+@keyframes star-shoot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-300px, 300px);
+  }
+}
+
+/* Static twinkling stars */
+.particle-twinkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  animation: twinkle ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.9; }
+}
+
+/* ---- RAINY: Falling rain drops ---- */
+.particle-rain {
+  position: absolute;
+  top: -20px;
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(to bottom, transparent, rgba(174, 214, 241, 0.6));
+  border-radius: 0 0 2px 2px;
+  animation: rain-fall linear infinite;
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0.3;
+  }
+}
+
+/* ---- SNOWY: Drifting snowflakes ---- */
+.particle-snow {
+  position: absolute;
+  top: -10px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: snow-fall linear infinite;
+}
+
+@keyframes snow-fall {
+  0% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) translateX(40px) rotate(360deg);
+    opacity: 0.4;
+  }
+}
+
+/* ---- SUNNY: Floating light particles ---- */
+.particle-sun {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.4);
+  border-radius: 50%;
+  animation: sun-float ease-in-out infinite;
+}
+
+@keyframes sun-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.3);
+    opacity: 0.6;
+  }
+}
+
+/* ---- STORMY: Lightning flashes ---- */
+.particle-lightning {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: lightning-flash 6s ease-in-out infinite;
+}
+
+@keyframes lightning-flash {
+  0%, 92%, 100% { opacity: 0; }
+  93% { opacity: 0.7; }
+  94% { opacity: 0; }
+  96% { opacity: 0.4; }
+  97% { opacity: 0; }
+}
+
+/* ---- CLOUDY: Slow drifting shapes ---- */
+.particle-cloud {
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 50px;
+  animation: cloud-drift linear infinite;
+}
+
+@keyframes cloud-drift {
+  0% {
+    transform: translateX(-150px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 150px));
+  }
+}
+
+/* Reduced motion: disable all particles */
+@media (prefers-reduced-motion: reduce) {
+  #weather-particles {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   NIGHT THEME: Enhanced shooting stars
+   ============================================================ */
+.particle-star {
+  width: 2px !important;
+  height: 2px !important;
+  background: #ffffff !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Longer, brighter tail */
+.particle-star::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), transparent);
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+@keyframes star-shoot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  5% {
+    opacity: 1;
+    transform: translate(-10px, 10px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-400px, 400px) scale(0.3);
+  }
+}
+
+/* ============================================================
+   CANVAS-BASED WEATHER PARTICLES
+   ============================================================ */
+#weather-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Hide old DOM-based particles */
+.particle-star,
+.particle-twinkle,
+.particle-rain,
+.particle-snow,
+.particle-sun,
+.particle-lightning,
+.particle-cloud {
+  display: none !important;
+}
+
+/* ============================================================
+   WEATHER CANVAS: Full visibility — ensure it's not hidden
+   ============================================================ */
+#weather-particles {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#weather-canvas {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ============================================================
+   CLEAR BUTTON: visible in dark/night theme
+   ============================================================ */
+.clear-history-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 600 !important;
+  padding: 0.4rem 1rem !important;
+  font-size: 0.78rem !important;
+}
+
+.clear-history-btn:hover {
+  background: rgba(255, 80, 80, 0.3) !important;
+  border-color: rgba(255, 80, 80, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* In light mode, make it dark */
+body:not(.dark) .clear-history-btn {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #374151 !important;
+}
+
+body:not(.dark) .clear-history-btn:hover {
+  background: rgba(220, 53, 69, 0.12) !important;
+  border-color: rgba(220, 53, 69, 0.4) !important;
+  color: #dc3545 !important;
+}
+
+/* ============================================================
+   GEO TOAST: slide from right, professional aesthetic
+   ============================================================ */
+.geo-toast {
+  position: fixed !important;
+  bottom: auto !important;
+  top: 80px !important;
+  right: 16px !important;
+  left: auto !important;
+  transform: translateX(120%) !important;
+  opacity: 0 !important;
+  max-width: 320px !important;
+  width: auto !important;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  background: rgba(15, 23, 42, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+  gap: 10px !important;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease !important;
+}
+
+.geo-toast.visible {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+}
+
+.geo-toast.hiding {
+  transform: translateX(120%) !important;
+  opacity: 0 !important;
+}
+
+.geo-toast-icon {
+  animation: none !important;
+  font-size: 1.2rem !important;
+}
+
+.geo-toast-text {
+  font-size: 0.82rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.geo-toast-close {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  font-size: 1rem !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ============================================================
+   NAVBAR AUTO-HIDE: faster, smoother
+   ============================================================ */
+.app-navbar {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.25s ease !important;
+}
+
+.app-navbar.nav-hidden {
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+}
+
+/* ============================================================
+   SIDEBAR PANELS (Favorites, History, Settings, About)
+   ============================================================ */
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  max-width: 90vw;
+  height: 100vh;
+  z-index: 220;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(15, 23, 42, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  color: #ffffff;
+}
+
+.side-panel:not([hidden]) {
+  transform: translateX(0);
+}
+
+.side-panel[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.side-panel-inner {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 100%;
+}
+
+.side-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.side-panel-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.side-panel-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.side-panel-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* List items */
+.side-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.side-panel-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.15s ease;
+}
+
+.side-panel-list li:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.side-panel-list .item-name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.side-panel-list .item-name:hover {
+  color: var(--accent);
+}
+
+.side-panel-list .item-delete {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 80, 80, 0.15);
+  border: none;
+  color: rgba(255, 120, 120, 0.8);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.side-panel-list .item-delete:hover {
+  background: rgba(255, 80, 80, 0.35);
+  color: #ffffff;
+}
+
+.side-panel-empty {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.side-panel-action-btn {
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.side-panel-action-btn.danger {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #ff8080;
+}
+
+.side-panel-action-btn.danger:hover {
+  background: rgba(220, 53, 69, 0.35);
+  color: #ffffff;
+}
+
+/* Settings */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.settings-toggle-btn {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.settings-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.settings-toggle-btn.danger {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #ff8080;
+}
+
+.settings-toggle-btn.danger:hover {
+  background: rgba(220, 53, 69, 0.35);
+  color: #ffffff;
+}
+
+/* About */
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.88rem;
+}
+
+.about-row span:first-child {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.about-row span:last-child {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Panel backdrop */
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 215;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.panel-backdrop:not([hidden]) {
+  opacity: 1;
+}
+
+.panel-backdrop[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Light mode panels */
+body:not(.dark) .side-panel {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .side-panel-header h2,
+body:not(.dark) .side-panel-list .item-name,
+body:not(.dark) .settings-label,
+body:not(.dark) .about-row span:last-child {
+  color: #1a2a3a !important;
+}
+
+body:not(.dark) .side-panel-list li,
+body:not(.dark) .settings-row {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+body:not(.dark) .side-panel-close,
+body:not(.dark) .settings-toggle-btn {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1a2a3a !important;
+}
+
+/* ============================================================
+   CLEAR BUTTON: always red, no hover change
+   ============================================================ */
+.clear-history-btn {
+  background: rgba(220, 53, 69, 0.75) !important;
+  border: 1px solid rgba(220, 53, 69, 0.9) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.clear-history-btn:hover {
+  background: rgba(220, 53, 69, 0.85) !important;
+  border-color: rgba(220, 53, 69, 1) !important;
+  color: #ffffff !important;
+}
+
+/* CLEAR button: always solid red, no hover dependency */
+#clear-history-btn,
+button.clear-history-btn {
+  background: #dc3545 !important;
+  border: 1px solid #c82333 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#clear-history-btn:hover,
+button.clear-history-btn:hover {
+  background: #c82333 !important;
+  border-color: #bd2130 !important;
+  color: #ffffff !important;
+}
+
+/* ============================================================
+   FIX: Remove blank space above content on all devices
+   ============================================================ */
+main {
+  margin-top: 56px !important;
+  padding-top: 1rem !important;
+}
+
+/* The navbar is ~52px tall, so 56px margin is enough */
+.app-navbar {
+  height: auto !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Remove any extra body padding that creates the gap */
+body {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure no hidden elements create space above main */
+#splash[hidden],
+#sidebar-backdrop:not(.open),
+#ptr-indicator {
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* The panels and sidebar should not affect layout flow */
+.side-panel,
+#sidebar,
+#sidebar-backdrop,
+.panel-backdrop,
+#weather-particles,
+#weather-canvas {
+  position: fixed !important;
+}
+
+/* ============================================================
+   FIX: Side panels always fully visible when open
+   ============================================================ */
+.side-panel:not([hidden]) {
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  z-index: 500 !important;
+}
+
+.panel-backdrop:not([hidden]) {
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  z-index: 490 !important;
+}
+
+/* Dark mode panel: ensure solid background */
+body.dark .side-panel,
+.side-panel {
+  background: #0f172a !important;
+  opacity: 1 !important;
+}
+
+body:not(.dark) .side-panel {
+  background: #ffffff !important;
+}
