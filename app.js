@@ -323,25 +323,29 @@ function applyWeatherParticles(bgClass) {
   particles = [];
   lightningOpacity = 0;
   currentWeatherTheme = bgClass;
+  particlesContainer.innerHTML = '';
+
+  // Reduce particles on mobile for better scroll performance
+  const isMobile = window.innerWidth < 768;
 
   switch (bgClass) {
     case 'bg-night':
-      initNightParticles();
+      initNightParticles(isMobile);
       break;
     case 'bg-rainy':
-      initRainParticles();
+      initRainParticles(isMobile);
       break;
     case 'bg-snowy':
-      initSnowParticles();
+      initSnowParticles(isMobile);
       break;
     case 'bg-sunny':
       initSunParticles();
       break;
     case 'bg-stormy':
-      initStormParticles();
+      initStormParticles(isMobile);
       break;
     case 'bg-cloudy':
-      initCloudParticles();
+      initCloudParticles(isMobile);
       break;
   }
 
@@ -369,12 +373,13 @@ function animateParticles() {
 }
 
 // ---- NIGHT: Stars + shooting stars ----
-function initNightParticles() {
+function initNightParticles(isMobile) {
   const w = weatherCanvas.width;
   const h = weatherCanvas.height;
+  const starCount = isMobile ? 50 : 120;
+  const shootCount = isMobile ? 3 : 5;
 
-  // Static twinkling stars
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < starCount; i++) {
     particles.push({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -397,8 +402,7 @@ function initNightParticles() {
     });
   }
 
-  // Shooting stars (continuous)
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < shootCount; i++) {
     particles.push(createShootingStar(w, h, i * 2));
   }
 }
@@ -455,11 +459,12 @@ function createShootingStar(w, h, delay) {
 }
 
 // ---- RAINY: Continuous rain drops ----
-function initRainParticles() {
+function initRainParticles(isMobile) {
   const w = weatherCanvas.width;
   const h = weatherCanvas.height;
+  const count = isMobile ? 80 : 200;
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -491,11 +496,12 @@ function initRainParticles() {
 }
 
 // ---- SNOWY: Drifting snowflakes ----
-function initSnowParticles() {
+function initSnowParticles(isMobile) {
   const w = weatherCanvas.width;
   const h = weatherCanvas.height;
+  const count = isMobile ? 40 : 100;
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -553,12 +559,12 @@ function initSunParticles() {
 }
 
 // ---- STORMY: Heavy rain + lightning ----
-function initStormParticles() {
+function initStormParticles(isMobile) {
   const w = weatherCanvas.width;
   const h = weatherCanvas.height;
+  const count = isMobile ? 100 : 250;
 
-  // Heavy rain
-  for (let i = 0; i < 250; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -601,11 +607,12 @@ function initStormParticles() {
 }
 
 // ---- CLOUDY: Clouds drifting across ----
-function initCloudParticles() {
+function initCloudParticles(isMobile) {
   const w = weatherCanvas.width;
   const h = weatherCanvas.height;
+  const count = isMobile ? 5 : 10;
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * w - 200,
       y: 30 + Math.random() * (h * 0.5),

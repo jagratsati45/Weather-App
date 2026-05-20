@@ -5500,3 +5500,72 @@ body:not(.dark) .about-row span:first-child {
     font-size: 9px !important;
   }
 }
+
+/* ============================================================
+   PERFORMANCE: Smooth scrolling + faster card rendering
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  -webkit-overflow-scrolling: touch !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: none;
+}
+
+/* GPU-accelerate all cards for faster paint */
+#weather-card,
+#aqi-widget,
+#tips-widget,
+.hour-card,
+#forecast > li,
+section[aria-label="Hourly forecast"],
+section[aria-label="5-day forecast"] {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Reduce backdrop-filter on mobile (expensive on GPU) */
+@media (max-width: 767px) {
+  #weather-card,
+  #aqi-widget,
+  #tips-widget,
+  .hour-card,
+  #forecast > li,
+  .stat-row,
+  .aqi-pill,
+  .tip-pill {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Smooth horizontal scrolling for hourly strip */
+.hourly-strip {
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+  overscroll-behavior-x: contain;
+}
+
+/* Remove heavy transitions on mobile for snappier feel */
+@media (max-width: 767px) {
+  .hour-card,
+  #forecast > li,
+  .stat-row {
+    transition: none !important;
+  }
+
+  .hour-card:hover,
+  #forecast > li:hover {
+    transform: none !important;
+  }
+}
+
+/* Reduce particle count impact on scroll performance */
+#weather-canvas {
+  will-change: contents;
+  contain: strict;
+}
