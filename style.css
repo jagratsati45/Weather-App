@@ -5569,3 +5569,38 @@ section[aria-label="5-day forecast"] {
   will-change: contents;
   contain: strict;
 }
+
+/* ============================================================
+   FIX: Scrolling broken on all devices
+   ============================================================ */
+html, body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  overscroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+body {
+  display: block !important;
+  position: relative !important;
+}
+
+/* Only lock scroll when sidebar is actually open */
+body.sidebar-open {
+  overflow: hidden !important;
+}
+
+/* Canvas must never block scroll/touch events */
+#weather-particles,
+#weather-canvas {
+  pointer-events: none !important;
+  touch-action: none !important;
+}
+
+/* Main content must be scrollable */
+main {
+  position: relative !important;
+  overflow: visible !important;
+}
