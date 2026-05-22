@@ -5604,3 +5604,166 @@ main {
   position: relative !important;
   overflow: visible !important;
 }
+
+/* ============================================================
+   DISABLE: Weather animated themes + canvas particles
+   Keep only light/dark mode
+   ============================================================ */
+
+/* Hide the canvas particles entirely */
+#weather-particles,
+#weather-canvas {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove all weather gradient backgrounds */
+body.bg-sunny,
+body.bg-night,
+body.bg-cloudy,
+body.bg-rainy,
+body.bg-snowy,
+body.bg-stormy {
+  background: none !important;
+  animation: none !important;
+}
+
+/* LIGHT MODE (default): clean soft background */
+body:not(.dark) {
+  background: linear-gradient(180deg, #e8f4f8 0%, #d4e8f0 50%, #c5dde8 100%) !important;
+  animation: none !important;
+  background-attachment: fixed !important;
+}
+
+/* DARK MODE: clean dark background */
+body.dark {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+  animation: none !important;
+  background-attachment: fixed !important;
+}
+
+/* ---- DARK MODE: card visibility ---- */
+body.dark #weather-card,
+body.dark #aqi-widget,
+body.dark #tips-widget,
+body.dark section[aria-label="Hourly forecast"],
+body.dark section[aria-label="5-day forecast"] {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark .hour-card,
+body.dark #forecast > li {
+  background: rgba(51, 65, 85, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark .stat-row {
+  background: rgba(51, 65, 85, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark .aqi-pill {
+  background: rgba(51, 65, 85, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark .tip-pill {
+  background: rgba(51, 65, 85, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark .history-pill {
+  background: rgba(51, 65, 85, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Dark mode text: all clearly visible */
+body.dark #weather-card,
+body.dark #weather-card *,
+body.dark #aqi-widget *,
+body.dark #tips-widget *,
+body.dark section[aria-label="Hourly forecast"] *,
+body.dark section[aria-label="5-day forecast"] * {
+  color: #e2e8f0 !important;
+  text-shadow: none !important;
+}
+
+body.dark .stat-label,
+body.dark .aqi-title,
+body.dark .aqi-pill-label,
+body.dark .aqi-pill-unit,
+body.dark .tips-label,
+body.dark .hour-time,
+body.dark .sun-label,
+body.dark .section-title,
+body.dark section[aria-label="5-day forecast"] h2 {
+  color: #94a3b8 !important;
+}
+
+/* Dark mode navbar */
+body.dark .app-navbar {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark .brand-name {
+  color: #f1f5f9 !important;
+}
+
+body.dark .brand-tagline {
+  color: #64748b !important;
+}
+
+body.dark .nav-search-form {
+  background: rgba(51, 65, 85, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark .nav-search-form #city-input {
+  color: #f1f5f9 !important;
+}
+
+body.dark .nav-search-form #city-input::placeholder {
+  color: #64748b !important;
+}
+
+body.dark .menu-btn,
+body.dark .nav-search-icon,
+body.dark .nav-geo-btn {
+  background: rgba(51, 65, 85, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Dark mode footer */
+body.dark footer {
+  color: #64748b !important;
+}
+
+/* ---- FAVORITE BUTTON: always visible ---- */
+#favorite-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.4rem !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  color: #fbbf24 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#favorite-btn[hidden] {
+  display: none !important;
+}
+
+body.dark #favorite-btn {
+  color: #fbbf24 !important;
+}
+
+body:not(.dark) #favorite-btn {
+  color: #f59e0b !important;
+}

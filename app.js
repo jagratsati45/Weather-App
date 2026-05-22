@@ -314,341 +314,9 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 function applyWeatherParticles(bgClass) {
-  if (!ctx) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  // Stop previous animation
-  if (particleAnimId) cancelAnimationFrame(particleAnimId);
-  if (lightningTimer) clearInterval(lightningTimer);
-  particles = [];
-  lightningOpacity = 0;
-  currentWeatherTheme = bgClass;
-  particlesContainer.innerHTML = '';
-
-  // Reduce particles on mobile for better scroll performance
-  const isMobile = window.innerWidth < 768;
-
-  switch (bgClass) {
-    case 'bg-night':
-      initNightParticles(isMobile);
-      break;
-    case 'bg-rainy':
-      initRainParticles(isMobile);
-      break;
-    case 'bg-snowy':
-      initSnowParticles(isMobile);
-      break;
-    case 'bg-sunny':
-      initSunParticles();
-      break;
-    case 'bg-stormy':
-      initStormParticles(isMobile);
-      break;
-    case 'bg-cloudy':
-      initCloudParticles(isMobile);
-      break;
-  }
-
-  animateParticles();
+  return;
 }
 
-function animateParticles() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-
-  // Lightning flash overlay for stormy
-  if (lightningOpacity > 0) {
-    ctx.fillStyle = `rgba(255, 255, 255, ${lightningOpacity})`;
-    ctx.fillRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-    lightningOpacity *= 0.9;
-    if (lightningOpacity < 0.01) lightningOpacity = 0;
-  }
-
-  for (const p of particles) {
-    p.update();
-    p.draw(ctx);
-  }
-
-  particleAnimId = requestAnimationFrame(animateParticles);
-}
-
-// ---- NIGHT: Stars + shooting stars ----
-function initNightParticles(isMobile) {
-  const w = weatherCanvas.width;
-  const h = weatherCanvas.height;
-  const starCount = isMobile ? 50 : 120;
-  const shootCount = isMobile ? 3 : 5;
-
-  for (let i = 0; i < starCount; i++) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: 1 + Math.random() * 2.5,
-      twinkleSpeed: 0.02 + Math.random() * 0.03,
-      phase: Math.random() * Math.PI * 2,
-      update() {
-        this.phase += this.twinkleSpeed;
-      },
-      draw(c) {
-        const alpha = 0.5 + Math.sin(this.phase) * 0.5;
-        c.beginPath();
-        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        c.fillStyle = `rgba(255, 255, 255, ${Math.max(0.1, alpha)})`;
-        c.shadowBlur = 4;
-        c.shadowColor = 'rgba(255, 255, 255, 0.8)';
-        c.fill();
-        c.shadowBlur = 0;
-      },
-    });
-  }
-
-  for (let i = 0; i < shootCount; i++) {
-    particles.push(createShootingStar(w, h, i * 2));
-  }
-}
-
-function createShootingStar(w, h, delay) {
-  return {
-    x: Math.random() * w * 0.8 + w * 0.1,
-    y: Math.random() * h * 0.4,
-    speed: 4 + Math.random() * 3,
-    length: 60 + Math.random() * 40,
-    opacity: 0,
-    delay: delay,
-    timer: 0,
-    active: false,
-    update() {
-      this.timer++;
-      if (this.timer < this.delay * 60) return;
-      this.active = true;
-      this.x -= this.speed;
-      this.y += this.speed * 0.6;
-      this.opacity = Math.min(1, this.opacity + 0.05);
-
-      // Reset when off screen
-      if (this.x < -100 || this.y > weatherCanvas.height + 50) {
-        this.x = Math.random() * weatherCanvas.width * 0.8 + weatherCanvas.width * 0.1;
-        this.y = Math.random() * weatherCanvas.height * 0.3;
-        this.opacity = 0;
-        this.delay = 1 + Math.random() * 3;
-        this.timer = 0;
-        this.active = false;
-      }
-    },
-    draw(c) {
-      if (!this.active) return;
-      const gradient = c.createLinearGradient(
-        this.x, this.y,
-        this.x + this.length * 0.7, this.y - this.length * 0.4
-      );
-      gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      c.beginPath();
-      c.moveTo(this.x, this.y);
-      c.lineTo(this.x + this.length * 0.7, this.y - this.length * 0.4);
-      c.strokeStyle = gradient;
-      c.lineWidth = 1.5;
-      c.stroke();
-      // Head glow
-      c.beginPath();
-      c.arc(this.x, this.y, 2, 0, Math.PI * 2);
-      c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-      c.fill();
-    },
-  };
-}
-
-// ---- RAINY: Continuous rain drops ----
-function initRainParticles(isMobile) {
-  const w = weatherCanvas.width;
-  const h = weatherCanvas.height;
-  const count = isMobile ? 80 : 200;
-
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      speed: 10 + Math.random() * 8,
-      length: 20 + Math.random() * 20,
-      opacity: 0.4 + Math.random() * 0.5,
-      wind: -2,
-      width: 1.5 + Math.random() * 1,
-      update() {
-        this.y += this.speed;
-        this.x += this.wind;
-        if (this.y > weatherCanvas.height) {
-          this.y = -this.length;
-          this.x = Math.random() * weatherCanvas.width;
-        }
-        if (this.x < 0) this.x = weatherCanvas.width;
-      },
-      draw(c) {
-        c.beginPath();
-        c.moveTo(this.x, this.y);
-        c.lineTo(this.x + this.wind * 2, this.y + this.length);
-        c.strokeStyle = `rgba(174, 214, 241, ${this.opacity})`;
-        c.lineWidth = this.width;
-        c.lineCap = 'round';
-        c.stroke();
-      },
-    });
-  }
-}
-
-// ---- SNOWY: Drifting snowflakes ----
-function initSnowParticles(isMobile) {
-  const w = weatherCanvas.width;
-  const h = weatherCanvas.height;
-  const count = isMobile ? 40 : 100;
-
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: 3 + Math.random() * 5,
-      speed: 0.8 + Math.random() * 2,
-      wind: Math.random() * 0.5 - 0.25,
-      wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: 0.02 + Math.random() * 0.02,
-      opacity: 0.6 + Math.random() * 0.4,
-      update() {
-        this.y += this.speed;
-        this.wobble += this.wobbleSpeed;
-        this.x += Math.sin(this.wobble) * 0.8 + this.wind;
-        if (this.y > weatherCanvas.height + 10) {
-          this.y = -10;
-          this.x = Math.random() * weatherCanvas.width;
-        }
-        if (this.x < -10) this.x = weatherCanvas.width + 10;
-        if (this.x > weatherCanvas.width + 10) this.x = -10;
-      },
-      draw(c) {
-        c.beginPath();
-        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        c.shadowBlur = 3;
-        c.shadowColor = 'rgba(255, 255, 255, 0.5)';
-        c.fill();
-        c.shadowBlur = 0;
-      },
-    });
-  }
-}
-
-// ---- SUNNY: Keep existing DOM-based (don't touch) ----
-function initSunParticles() {
-  // Sunny uses the existing subtle DOM particles — keep it light
-  particlesContainer.innerHTML = '';
-  for (let i = 0; i < 15; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle-sun';
-    particle.style.cssText = `
-      position:absolute;
-      left:${Math.random() * 100}%;
-      top:${Math.random() * 100}%;
-      width:${3 + Math.random() * 4}px;
-      height:${3 + Math.random() * 4}px;
-      background:rgba(255,215,0,0.4);
-      border-radius:50%;
-      animation:sun-float ${3 + Math.random() * 4}s ease-in-out infinite;
-      animation-delay:${Math.random() * 3}s;
-      display:block !important;
-    `;
-    particlesContainer.appendChild(particle);
-  }
-}
-
-// ---- STORMY: Heavy rain + lightning ----
-function initStormParticles(isMobile) {
-  const w = weatherCanvas.width;
-  const h = weatherCanvas.height;
-  const count = isMobile ? 100 : 250;
-
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      speed: 14 + Math.random() * 10,
-      length: 25 + Math.random() * 25,
-      opacity: 0.3 + Math.random() * 0.5,
-      wind: -4 + Math.random() * -2,
-      width: 1.5 + Math.random() * 1,
-      update() {
-        this.y += this.speed;
-        this.x += this.wind;
-        if (this.y > weatherCanvas.height) {
-          this.y = -this.length;
-          this.x = Math.random() * weatherCanvas.width;
-        }
-        if (this.x < -20) this.x = weatherCanvas.width + 20;
-      },
-      draw(c) {
-        c.beginPath();
-        c.moveTo(this.x, this.y);
-        c.lineTo(this.x + this.wind * 1.5, this.y + this.length);
-        c.strokeStyle = `rgba(200, 220, 240, ${this.opacity})`;
-        c.lineWidth = this.width;
-        c.lineCap = 'round';
-        c.stroke();
-      },
-    });
-  }
-
-  // Lightning flashes at random intervals
-  lightningTimer = setInterval(() => {
-    if (Math.random() > 0.4) {
-      lightningOpacity = 0.25 + Math.random() * 0.3;
-      // Double flash
-      setTimeout(() => {
-        lightningOpacity = 0.15 + Math.random() * 0.25;
-      }, 80 + Math.random() * 80);
-    }
-  }, 1500 + Math.random() * 2500);
-}
-
-// ---- CLOUDY: Clouds drifting across ----
-function initCloudParticles(isMobile) {
-  const w = weatherCanvas.width;
-  const h = weatherCanvas.height;
-  const count = isMobile ? 5 : 10;
-
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * w - 200,
-      y: 30 + Math.random() * (h * 0.5),
-      width: 200 + Math.random() * 250,
-      height: 50 + Math.random() * 40,
-      speed: 0.3 + Math.random() * 0.5,
-      opacity: 0.08 + Math.random() * 0.1,
-      update() {
-        this.x += this.speed;
-        if (this.x > weatherCanvas.width + 300) {
-          this.x = -this.width - 100;
-          this.y = 30 + Math.random() * (weatherCanvas.height * 0.5);
-        }
-      },
-      draw(c) {
-        const cx = this.x + this.width / 2;
-        const cy = this.y + this.height / 2;
-        c.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        // Main body
-        c.beginPath();
-        c.ellipse(cx, cy, this.width / 2, this.height / 2, 0, 0, Math.PI * 2);
-        c.fill();
-        // Left bump
-        c.beginPath();
-        c.ellipse(cx - this.width * 0.25, cy + 8, this.width * 0.3, this.height * 0.5, 0, 0, Math.PI * 2);
-        c.fill();
-        // Right bump
-        c.beginPath();
-        c.ellipse(cx + this.width * 0.2, cy - 5, this.width * 0.35, this.height * 0.55, 0, 0, Math.PI * 2);
-        c.fill();
-      },
-    });
-  }
-}
-
-// ---------- Unit helpers ----------
 function cToF(c) {
   return (c * 9) / 5 + 32;
 }
@@ -666,7 +334,6 @@ function applyUnit() {
     temperatureEl.textContent = formatTemp(state.tempC);
   }
 
-  // Update 5-day forecast
   const tempSpans = forecastEl.querySelectorAll('.temp');
   state.forecastDays.forEach((day, i) => {
     if (tempSpans[i]) {
@@ -674,7 +341,6 @@ function applyUnit() {
     }
   });
 
-  // Update hourly strip
   const hourTempSpans = hourlyEl.querySelectorAll('.hour-temp');
   state.hourlyEntries.forEach((hour, i) => {
     if (hourTempSpans[i]) {
@@ -687,8 +353,6 @@ function toggleUnit() {
   state.unit = state.unit === 'C' ? 'F' : 'C';
   localStorage.setItem('unit', state.unit);
   applyUnit();
-
-  // Refresh document title with the new unit
   if (state.tempC != null && state.currentCity) {
     const condition = conditionEl.textContent || '';
     const temp = state.unit === 'F'
@@ -703,7 +367,6 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// ---------- Custom error ----------
 class WeatherApiError extends Error {
   constructor(message, status) {
     super(message);
@@ -712,33 +375,18 @@ class WeatherApiError extends Error {
   }
 }
 
-// ---------- Document title ----------
 const DEFAULT_TITLE = 'Weather View — Your Sky, Your Way';
 
-/**
- * Update the browser tab title to reflect the current weather.
- * Format: "23° Cloudy — New Delhi | Weather View"
- */
 function updateDocumentTitle(data) {
-  if (!data) {
-    document.title = DEFAULT_TITLE;
-    return;
-  }
-
+  if (!data) { document.title = DEFAULT_TITLE; return; }
   const tempC = data.main?.temp;
   const condition = data.weather?.[0]?.main || '';
   const city = data.name || '';
-
-  if (tempC == null || !city) {
-    document.title = DEFAULT_TITLE;
-    return;
-  }
-
+  if (tempC == null || !city) { document.title = DEFAULT_TITLE; return; }
   const temp = state.unit === 'F' ? Math.round(cToF(tempC)) : Math.round(tempC);
   document.title = `${temp}° ${condition} — ${city} | Weather View`;
 }
 
-// ---------- Shared request helper ----------
 async function requestJson(endpoint, params) {
   const query = new URLSearchParams({
     ...params,
@@ -746,22 +394,17 @@ async function requestJson(endpoint, params) {
     appid: API_KEY,
   });
   const response = await fetch(`${BASE_URL}${endpoint}?${query}`);
-
   if (response.status !== 200) {
     let message = `Request failed with status ${response.status}`;
     try {
       const body = await response.json();
       if (body && body.message) message = body.message;
-    } catch {
-      // Response body wasn't JSON; keep the default message.
-    }
+    } catch {}
     throw new WeatherApiError(message, response.status);
   }
-
   return response.json();
 }
 
-// ---------- Fetch weather ----------
 async function fetchWeather(city, { forceRefresh = false } = {}) {
   const key = cacheKey('weather', city);
   if (!forceRefresh) {
